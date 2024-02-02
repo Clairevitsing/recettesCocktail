@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Axios from "axios";
+import WelcomeScreen from './components/WelcomeScreen';
 import HomeScreen from './components/Homescreen';
 import DetailsScreen from './components/DetailsScreen';
 
@@ -12,25 +13,17 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
 
-
-
-  
-
-
   return (
     <NavigationContainer>
       {/* initialRouteName="Home" pour définir la route par défault */}
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen} />
-           
-          {/* // c'est une option, on peut essayer, par exemple il y a aussi une option "welcome"
+      <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Screen name="Welcome" component={WelcomeScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+
+        {/* // c'est une option, on peut essayer, par exemple il y a aussi une option "welcome"
           options={{ title: 'Overview' }}
         /> */}
-        {/* <Stack.Screen name="Home">
-          {props => <HomeScreen {...props} extraData={drinksData} />}
-        </Stack.Screen> */}
+
         <Stack.Screen name="Details" component={DetailsScreen} />
         {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
       </Stack.Navigator>

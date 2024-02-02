@@ -1,11 +1,7 @@
 import { StyleSheet, SafeAreaView, FlatList, ActivityIndicator, Button, ImageBackground, TouchableOpacity, Image, ScrollView, Text, View } from 'react-native';
-// import { Icon } from 'react-native-gradient-icon';
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import { SparklesIcon as SparklesIconMicro } from "react-native-heroicons/micro";
 import * as Icons from "react-native-heroicons/solid";
 
 
@@ -33,9 +29,6 @@ const HomeScreen = () => {
     fetchDrinksData();
   }, []);
 
-
-   
-    
       if (!drinksData) {
                 return (
                 <View style={styles.loadingContainer}>
