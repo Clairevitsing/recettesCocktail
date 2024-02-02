@@ -1,16 +1,40 @@
-import { StyleSheet, SafeAreaView, FlatList, ActivityIndicator, Button, ImageBackground,TouchableOpacity, Image, ScrollView,Text, View } from 'react-native';
+import { StyleSheet, SafeAreaView, FlatList, ActivityIndicator, Button, ImageBackground, TouchableOpacity, Image, ScrollView, Text, View } from 'react-native';
+// import { Icon } from 'react-native-gradient-icon';
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import { SparklesIcon as SparklesIconMicro } from "react-native-heroicons/micro";
+import * as Icons from "react-native-heroicons/solid";
 
 
+const HomeScreen = () => {
+  const navigation = useNavigation();
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [drinksData, setDrinksData] = useState(false);
+
+  useEffect(() => {
+     const fetchDrinksData = async () => {
+      try {
+        // const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?f=a`);
+        // const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/randomselection.php`);
+        const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail&p=${page}`);
+        
+        const { drinks } = await response.json();
+        setDrinksData(drinks);
+        console.log(drinks);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchDrinksData();
+  }, []);
 
 
-
-
-const HomeScreen = ({ drinksData,navigation }) => {
-
+   
     
       if (!drinksData) {
                 return (
@@ -24,14 +48,18 @@ const HomeScreen = ({ drinksData,navigation }) => {
     return (
       
       <SafeAreaView style={styles.safeAreaViewContainer}>
-            <View style={styles.container}>
+      
+            <View style={styles.drinksContainer}>
                 {/* <ImageBackground source={require('../assets/images/home.jpg')} resizeMode='cover' style={styles.image}> */}
                 <FlatList
                     data={drinksData} 
                     renderItem={({ item }) => (
                         <View style={styles.itemContainer}>
                         <Image source={{ uri: item.strDrinkThumb }} style={styles.image} />
-                            <Text style={styles.text}>Nom: {item.strDrink}</Text>
+                        <Text style={styles.text}>Name: {item.strDrink}</Text>
+                        <Icons.HeartIcon />
+
+                        
                         <Button title="Go to Détails"
                           onPress={() => navigation.navigate('Details', { drink: item })} />
                         
@@ -52,7 +80,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff', 
   },
-  container: {
+  drinksContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

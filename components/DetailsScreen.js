@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View,Image } from 'react-native';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,6 +12,7 @@ function DetailsScreen({ route, navigation }) {
 
   return (
     <View style={styles.container}>
+      <Image source={{ uri: drink.strDrinkThumb }} style={styles.image} />
       <Text style={styles.text}>Nom: {drink.strDrink}</Text>
       <Text style={styles.text}>ID: {drink.idDrink}</Text>
       <Text style={styles.text}>Alcoolisé: {drink.strAlcoholic}</Text>
@@ -32,6 +33,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
+    marginBottom: 10,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    borderRadius: 50,
     marginBottom: 10,
   },
 });

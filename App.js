@@ -12,23 +12,7 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
 
-  const [loading, setLoading] = useState(true);
-  const [drinksData, setDrinksData] = useState(false);
 
-  useEffect(() => {
-     const fetchDrinksData = async () => {
-      try {
-        const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?f=a`);
-        const { drinks } = await response.json();
-        setDrinksData(drinks);
-        console.log(drinks);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchDrinksData();
-  }, []);
 
   
 
@@ -39,11 +23,11 @@ export default function App() {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
           name="Home"
-           component={() => <HomeScreen drinksData={drinksData} />}
+          component={HomeScreen} />
            
-          // c'est une option, on peut essayer, par exemple il y a aussi une option "welcome"
+          {/* // c'est une option, on peut essayer, par exemple il y a aussi une option "welcome"
           options={{ title: 'Overview' }}
-        />
+        /> */}
         {/* <Stack.Screen name="Home">
           {props => <HomeScreen {...props} extraData={drinksData} />}
         </Stack.Screen> */}
