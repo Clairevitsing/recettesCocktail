@@ -5,9 +5,9 @@ import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Axios from "axios";
-import WelcomeScreen from './components/WelcomeScreen';
-import HomeScreen from './components/Homescreen';
-import DetailsScreen from './components/DetailsScreen';
+import WelcomeScreen from './screens/WelcomeScreen';
+import HomeScreen from './screens/Homescreen';
+import DetailsScreen from './screens/DetailsScreen';
 
 const Stack = createNativeStackNavigator();
 
