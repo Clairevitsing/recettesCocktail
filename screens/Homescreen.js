@@ -18,7 +18,8 @@ import { useNavigation } from "@react-navigation/native";
 import * as Icons from "react-native-heroicons/solid";
 import * as Icon from "react-native-feather";
 import { StatusBar } from "expo-status-bar";
-import Categories from "../components/randomList";
+import RandomList from "../components/randomList";
+import SearchListByIngredient from "../components/SearchListByIngredient";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -26,7 +27,7 @@ const HomeScreen = () => {
   const [loading, setLoading] = useState(true);
   const [drinksData, setDrinksData] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResultsByIngredient, setSearchResultsByIngredient] = useState([]);
 
 
   useEffect(() => {
@@ -39,8 +40,7 @@ const HomeScreen = () => {
       `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchQuery}`);
     
      const { cocktails } = await response.json();
-     setSearchResults(cocktails);
-
+     setSearchResultsByIngredient(cocktails);
   }
   const fetchDrinksData = async () => {
     try {
@@ -73,8 +73,19 @@ const HomeScreen = () => {
       <View style={styles.searchArea}>
         {/* search bar */}
         <View style={styles.search}>
-          <Icon.Search style={styles.searchIcon} />
-          <TextInput placeholder="input" style={styles.input} />
+          <Icon.Search
+            style={styles.searchIcon}
+            onPress={handleSearchByIngredient}
+          />
+          <TextInput
+            placeholder="input"
+            style={styles.input}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchResultsByIngredient.length > 0 && <SearchListByIngredient
+            searchResultsByIngredient={searchResultsByIngredient}
+          />}
         </View>
         <View style={styles.slides}>
           <Icon.Sliders style={styles.slidesIcon} />
@@ -82,11 +93,12 @@ const HomeScreen = () => {
       </View>
 
       {/* main */}
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.categoriesContainer}>
-        <Categories/>
-
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.categoriesContainer}
+      >
+        <RandomList />
       </ScrollView>
-
 
       <View style={styles.drinksContainer}>
         {/* <ImageBackground source={require('../assets/images/home.jpg')} resizeMode='cover' style={styles.image}> */}
