@@ -3,7 +3,7 @@ import {
   TextInput,
   SafeAreaView,
   FlatList,
-  ActivityIndicator,
+  
   Button,
   ImageBackground,
   TouchableOpacity,
@@ -18,30 +18,21 @@ import { useNavigation } from "@react-navigation/native";
 import * as Icons from "react-native-heroicons/solid";
 import * as Icon from "react-native-feather";
 import { StatusBar } from "expo-status-bar";
+import { heightPercentageToDP as hp} from "react-native-responsive-screen";
 import RandomList from "../components/randomList";
-import SearchListByIngredient from "../components/SearchListByIngredient";
+import DrinkList from "../components/DrinkList";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [drinksData, setDrinksData] = useState(false);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [drinksData, setDrinksData] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResultsByIngredient, setSearchResultsByIngredient] = useState([]);
-
 
   useEffect(() => {
     fetchDrinksData();
-    handleSearchByIngredient();
+    // handleSearchByIngredient();
   }, []);
 
-  const handleSearchByIngredient = async () => { 
-    const response = await fetch(
-      `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchQuery}`);
-    
-     const { cocktails } = await response.json();
-     setSearchResultsByIngredient(cocktails);
-  }
   const fetchDrinksData = async () => {
     try {
       // const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?f=a`);
@@ -57,71 +48,39 @@ const HomeScreen = () => {
     }
   };
 
-  if (!drinksData) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
 
   return (
     <SafeAreaView style={styles.safeAreaViewContainer}>
-      <StatusBar
-        style={{ backgroundColor: "blue", barStyle: "dark-content" }}
-      />
+      {/* <StatusBar
+        style={{ backgroundColor: "white", barStyle: "dark-content" }}
+      /> */}
+      {/* header */}
+      <View style={styles.headerBar}>
+        <View style={styles.slides}>
+          <Icon.Sliders style={styles.slidesIcon} />
+        </View>
+        <Image
+          source={require("../assets/images/admin.png")}
+          resizeMode="cover"
+          style={styles.adminImage}
+        />
+      </View>
       <View style={styles.searchArea}>
         {/* search bar */}
         <View style={styles.search}>
-          <Icon.Search
-            style={styles.searchIcon}
-            onPress={handleSearchByIngredient}
-          />
           <TextInput
-            placeholder="input"
+            placeholder="Search Your Favorite Cocktail"
             style={styles.input}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
           />
-          {searchResultsByIngredient.length > 0 && <SearchListByIngredient
-            searchResultsByIngredient={searchResultsByIngredient}
-          />}
-        </View>
-        <View style={styles.slides}>
-          <Icon.Sliders style={styles.slidesIcon} />
+
+          <Icon.Search style={styles.searchIcon} />
         </View>
       </View>
 
       {/* main */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.categoriesContainer}
-      >
-        <RandomList />
-      </ScrollView>
 
       <View style={styles.drinksContainer}>
-        {/* <ImageBackground source={require('../assets/images/home.jpg')} resizeMode='cover' style={styles.image}> */}
-        <FlatList
-          data={drinksData}
-          renderItem={({ item }) => (
-            <View style={styles.itemContainer}>
-              <Image
-                source={{ uri: item.strDrinkThumb }}
-                style={styles.image}
-              />
-              <Text style={styles.text}>Name: {item.strDrink}</Text>
-              <Icons.HeartIcon />
-
-              <Button
-                title="Go to Détails"
-                onPress={() => navigation.navigate("Details", { drink: item })}
-              />
-            </View>
-          )}
-          keyExtractor={(item) => item.idDrink}
-        />
-        {/* </ImageBackground> */}
+        <DrinkList drinksData={drinksData} navigation={navigation} />
       </View>
     </SafeAreaView>
   );
@@ -132,6 +91,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
+  headerBar: {
+    flexDirection: "row",
+    marginBottom: 20,
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    marginVertical: 5,
+    alignItems: "center",
+  },
+
+  adminImage: {
+    width: hp(5),
+    height: hp(5),
+    borderRadius: 20,
+  },
+
   searchArea: {
     flexDirection: "row",
     alignItems: "center",
@@ -180,21 +154,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  image: {
-    width: 200,
-    height: 200,
-    borderRadius: 50,
-    marginBottom: 10,
-  },
-  itemContainer: {
-    marginBottom: 20,
-    padding: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
-    borderRadius: 10,
-  },
-  text: {
-    marginBottom: 5,
-  },
+
 });
 
 export default HomeScreen;
