@@ -9,8 +9,6 @@ import {
 } from "react-native";
 import * as React from 'react';
 import { useState } from "react";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import * as Icon from "react-native-feather";
 import * as Icons from "react-native-heroicons/solid";
@@ -21,6 +19,8 @@ function DetailsScreen({ route, navigation }) {
   // Get the drink object passed from navigation
   const { drink } = route.params; 
   const [isFavorited, setIsFavorited] = useState(false);
+
+ 
 
 
   return (

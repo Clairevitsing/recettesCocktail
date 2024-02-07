@@ -13,8 +13,23 @@ import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
-const DrinkList = ({ drinksData, navigation }) => {
-    const [isFavorited, setIsFavorited] = useState(false);
+const DrinkList = ({ drinksData, navigation,loadMoreItems }) => {
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+   
+  
+    const handleLoadMore = () => {
+      loadMoreItems(); 
+    };
+
+  const renderLoader = () => {
+    return isLoading ? (
+      <View style={styles.loaderStyle}>
+        <ActivityIndicator size="large" color="#aaa" />
+      </View>
+    ) : null;
+  };
+
 
   if (!drinksData) {
     return (
@@ -25,26 +40,38 @@ const DrinkList = ({ drinksData, navigation }) => {
   }
   return (
     <View style={styles.cocktailContainer}>
-      <FlatList
-        data={drinksData}
-        renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Details", { drink: item })}
-            >
-              <Image
-                source={{ uri: item.strDrinkThumb }}
-                style={styles.image}
-              />
-            </TouchableOpacity>
-            <View style={styles.description}>
-              <Text style={styles.text}>{item.strDrink}</Text>
+      {drinksData ? (
+        <FlatList
+          data={drinksData}
+          renderItem={({ item }) => (
+            <View style={styles.itemContainer}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Details", { drink: item })}
+              >
+                <Image
+                  source={{ uri: item.strDrinkThumb }}
+                  style={styles.image}
+                />
+              </TouchableOpacity>
+              <View style={styles.informations}>
+                <View style={styles.name}>
+                  <Text style={styles.text}>{item.strDrink}</Text>
+                </View>
+                <Icons.HeartIcon style={styles.heartIcon}/>
+              </View>
             </View>
-          </View>
-        )}
-        keyExtractor={(item) => item.idDrink}
-        contentContainerStyle={styles.container}
-      />
+          )}
+          // in order to keep the key unique
+          keyExtractor={(item, index) => item.idDrink + index}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={renderLoader}
+        />
+      ) : (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      )}
     </View>
   );
 };
@@ -71,21 +98,17 @@ const styles = {
     backgroundColor: "rgba(255, 255, 255, 0.7)",
     borderRadius: 10,
   },
-  description: {
-    marginBottom: 20,
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    marginVertical: 5,
-    alignItems: "center",
-  },
-  bottomContainer: {
+  informations: {
     flexDirection: "row",
     alignItems: "center",
   },
-  text: {
-    flex: 1,
-    marginBottom: 5,
+  name: {
+    flex: 1, // Take up remaining space
   },
+  heartIcon: {
+    marginLeft: 10, // Adjust spacing between text and icon
+  },
+
 };
 
 export default DrinkList;

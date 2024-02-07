@@ -1,53 +1,43 @@
-import {
-  StyleSheet,
-  TextInput,
-  SafeAreaView,
-  FlatList,
-  
-  Button,
-  ImageBackground,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { StyleSheet, TextInput, SafeAreaView, Image, View } from "react-native";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import * as Icons from "react-native-heroicons/solid";
 import * as Icon from "react-native-feather";
-import { StatusBar } from "expo-status-bar";
-import { heightPercentageToDP as hp} from "react-native-responsive-screen";
-import RandomList from "../components/randomList";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import DrinkList from "../components/DrinkList";
+import Axios from "axios";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [drinksData, setDrinksData] = useState(false);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [drinksData, setDrinksData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    fetchDrinksData();
-    // handleSearchByIngredient();
-  }, []);
-
-  const fetchDrinksData = async () => {
-    try {
-      // const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/search.php?f=a`);
-      // const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/randomselection.php`);
-      const response = await fetch(
-        `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail&p=${page}`
-      );
-      const { drinks } = await response.json();
-      setDrinksData(drinks);
-      console.log(drinks);
-    } catch (error) {
-      console.error("Error fetching Cocktail data:", error);
-    }
+  const loadMoreItems = () => {
+    setCurrentPage(currentPage + 1);
   };
 
+  useEffect(() => {
+    getDrinksData();
+  }, [currentPage]);
+
+  const getDrinksData = async () => {
+    try {
+      setIsLoading(true);
+      const response = await Axios.get(
+        `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail&p=${currentPage}`
+      );
+      setDrinksData((prevDrinksData) => [
+        ...prevDrinksData,
+        ...response.data.drinks,
+      ]);
+    } catch (error) {
+      console.error("Error fetching Cocktail data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeAreaViewContainer}>
@@ -80,7 +70,11 @@ const HomeScreen = () => {
       {/* main */}
 
       <View style={styles.drinksContainer}>
-        <DrinkList drinksData={drinksData} navigation={navigation} />
+        <DrinkList
+          drinksData={drinksData}
+          loadMoreItems={loadMoreItems}
+          navigation={navigation}
+        />
       </View>
     </SafeAreaView>
   );
@@ -154,7 +148,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
 });
 
 export default HomeScreen;
