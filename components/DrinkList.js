@@ -103,10 +103,10 @@ const styles = {
     alignItems: "center",
   },
   name: {
-    flex: 1, // Take up remaining space
+    flex: 1, 
   },
   heartIcon: {
-    marginLeft: 10, // Adjust spacing between text and icon
+    marginLeft: 10, 
   },
 
 };

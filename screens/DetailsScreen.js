@@ -7,22 +7,34 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import * as React from 'react';
-import { useState } from "react";
+import * as React from "react";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import * as Icon from "react-native-feather";
 import * as Icons from "react-native-heroicons/solid";
+import { useState, useEffect } from "react";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 function DetailsScreen({ route, navigation }) {
   console.log("Received props:", { route, navigation });
+  console.log("Données de la boisson:", drink);
   // Get the drink object passed from navigation
-  const { drink } = route.params; 
+  
+  const { drink } = route.params;
   const [isFavorited, setIsFavorited] = useState(false);
 
- 
 
-
+    const handleAlcoholicPress = () => {
+      if (drink.strAlcoholic === "Alcoholic") {
+        navigation.navigate("AlcoholicDrinks");
+      } else {
+        navigation.navigate("NonAlcoholicDrinks");
+      }
+    };
+  
+  useEffect(() => {
+    handleAlcoholicPress();
+  }, []);
+  
   return (
     <ScrollView contentContainerStyle={styles.contentContainer}>
       <View style={styles.barIcon}>
@@ -45,23 +57,36 @@ function DetailsScreen({ route, navigation }) {
         <Image source={{ uri: drink.strDrinkThumb }} style={styles.image} />
         <Text style={styles.text}>{drink.strDrink}</Text>
         <Text style={styles.text}>{drink.idDrink}</Text>
-        <Text style={styles.text}>Alcoolisé: {drink.strAlcoholic}</Text>
+        <TouchableOpacity onPress={handleAlcoholicPress}>
+          <Text style={styles.text}>
+            Alcoolisé: {drink.strAlcoholic}
+          </Text>
+        </TouchableOpacity>
         <Text style={styles.text}>Catégorie: {drink.strCategory}</Text>
         <Text style={styles.text}>Verre: {drink.strGlass}</Text>
-        <Text style={styles.text}>
-          Ingrédients: {drink.strIngredient1}, {drink.strIngredient2}, ...
-        </Text>
+        <Text style={styles.text}>Ingrédients:</Text>
+        {Object.keys(drink).map((key) => {
+          if (key.startsWith("strIngredient") && drink[key]) {
+            return (
+              <View key={key} style={styles.ingredientItem}>
+                <View style={styles.pinkSquare}></View>
+                <View style={styles.ingredientTextContainer}>
+                  <Text style={styles.ingredientText}>{drink[key]}</Text>
+                </View>
+              </View>
+            );
+          }
+        })}
         <Text style={styles.text}>Instructions: {drink.strInstructions}</Text>
       </View>
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
   },
-
   barIcon: {
     flexDirection: "row",
     marginBottom: 20,
@@ -103,7 +128,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
   text: {
     marginBottom: 10,
   },
@@ -114,9 +138,31 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   favoritedColor: {
-    color: "red", 
+    color: "red",
   },
+  ingredientItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
+  },
+  pinkSquare: {
+    width: 20,
+    height: 20,
+    backgroundColor: "pink",
+    marginRight: 10,
+  },
+  ingredientTextContainer: {
+    flex: 1,
+  },
+  ingredientText: {
+    fontSize: 16,
+  },
+  instructionsText: {
+    textAlign: "center",
+  },
+  underline: {
+    textDecorationLine: "underline",
+  }
 });
-
 
 export default DetailsScreen;

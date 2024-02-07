@@ -11,8 +11,10 @@ import Axios from "axios";
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [drinksData, setDrinksData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(97);
   const [isLoading, setIsLoading] = useState(true);
+  const randomLetter = (_) =>
+    String.fromCharCode(0 | (Math.random() * 26 + 97));
 
   const loadMoreItems = () => {
     setCurrentPage(currentPage + 1);
@@ -26,7 +28,9 @@ const HomeScreen = () => {
     try {
       setIsLoading(true);
       const response = await Axios.get(
-        `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail&p=${currentPage}`
+        `http://www.thecocktaildb.com/api/json/v1/1/search.php?f=${randomLetter(
+          currentPage
+        )}`
       );
       setDrinksData((prevDrinksData) => [
         ...prevDrinksData,
