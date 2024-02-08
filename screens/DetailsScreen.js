@@ -13,6 +13,7 @@ import * as Icon from "react-native-feather";
 import * as Icons from "react-native-heroicons/solid";
 import { useState, useEffect } from "react";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import {addToFavorites} from "../components/Favorites";
 
 
 
@@ -29,14 +30,11 @@ function DetailsScreen({ route, navigation }) {
   const handleAlcoholicPress = () => {
   navigation.navigate("AlcoholicDrinksScreen"); 
 };
-    // const handleAlcoholicPress = () => {
-    //   if (drink.strAlcoholic === "Alcoholic") {
-    //     navigation.navigate("AlcoholicDrinks");
-    //   } else {
-    //     navigation.navigate("NonAlcoholicDrinks");
-    //   }
-    // };
-  
+
+  const handleAddToFavorites = ({ }) => { 
+    addToFavorites(drink);
+     setIsFavorited(true);
+  };
   
   useEffect(() => {
     handleAlcoholicPress();
@@ -52,11 +50,11 @@ function DetailsScreen({ route, navigation }) {
           <ChevronLeftIcon />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => setIsFavorited(!isFavorited)}
+          title="Save to Favorites" onPress={handleAddToFavorites}
           style={styles.heartIconArea}
         >
           <Icons.HeartIcon
-            style={[styles.heartIcon, , isFavorited && styles.favoritedColor]}
+            style={[styles.heartIcon, isFavorited && styles.favoritedColor]}
           />
         </TouchableOpacity>
       </View>

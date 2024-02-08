@@ -1,4 +1,11 @@
-import { StyleSheet, TextInput, SafeAreaView, Image, View } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  SafeAreaView,
+  Image,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -23,6 +30,14 @@ const HomeScreen = () => {
   useEffect(() => {
     getDrinksData();
   }, [currentPage]);
+
+  const handleFavoritesList = () => {
+    navigation.navigate('Favorites');
+  }
+
+   const handleSearchCocktails = () => {
+     navigation.navigate("SearchCocktails");
+   };
 
   const getDrinksData = async () => {
     try {
@@ -53,22 +68,26 @@ const HomeScreen = () => {
         <View style={styles.slides}>
           <Icon.Sliders style={styles.slidesIcon} />
         </View>
+        <TouchableOpacity
+          title="Search Cocktails"
+          onPress={handleSearchCocktails}
+          style={styles.heartIconArea}
+        >
+          <Icon.Search style={styles.searchIcon} />
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          title="Favorites list"
+          onPress={handleFavoritesList}
+          style={styles.heartIconArea}
+        >
+          <Icons.HeartIcon style={[styles.heartIcon]} />
+        </TouchableOpacity>
         <Image
           source={require("../assets/images/admin.png")}
           resizeMode="cover"
           style={styles.adminImage}
         />
-      </View>
-      <View style={styles.searchArea}>
-        {/* search bar */}
-        <View style={styles.search}>
-          <TextInput
-            placeholder="Search Your Favorite Cocktail"
-            style={styles.input}
-          />
-
-          <Icon.Search style={styles.searchIcon} />
-        </View>
       </View>
 
       {/* main */}
@@ -97,20 +116,22 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     alignItems: "center",
   },
-
+ heartIconArea: {
+    backgroundColor: "#FFB6C1",
+    padding: 6,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 500,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   adminImage: {
     width: hp(5),
     height: hp(5),
     borderRadius: 20,
   },
 
-  searchArea: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 20,
-    marginBottom: 20,
-  },
+ 
   search: {
     flexDirection: "row",
     alignItems: "center",
