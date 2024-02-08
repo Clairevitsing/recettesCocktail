@@ -26,12 +26,8 @@ export default function App() {
         /> */}
         <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen
-          name="AlcoholicDrinks"
+          name="AlcoholicDrinksScreen"
           component={AlcoholicDrinksScreen}
-        />
-        <Stack.Screen
-          name=" NonAlcoholicDrinksScreen"
-          component={NonAlcoholicDrinksScreen}
         />
         {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
       </Stack.Navigator>

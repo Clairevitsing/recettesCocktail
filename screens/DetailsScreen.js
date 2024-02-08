@@ -14,6 +14,10 @@ import * as Icons from "react-native-heroicons/solid";
 import { useState, useEffect } from "react";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
+
+
+
+
 function DetailsScreen({ route, navigation }) {
   console.log("Received props:", { route, navigation });
   console.log("Données de la boisson:", drink);
@@ -22,14 +26,17 @@ function DetailsScreen({ route, navigation }) {
   const { drink } = route.params;
   const [isFavorited, setIsFavorited] = useState(false);
 
-
-    const handleAlcoholicPress = () => {
-      if (drink.strAlcoholic === "Alcoholic") {
-        navigation.navigate("AlcoholicDrinks");
-      } else {
-        navigation.navigate("NonAlcoholicDrinks");
-      }
-    };
+  const handleAlcoholicPress = () => {
+  navigation.navigate("AlcoholicDrinksScreen"); 
+};
+    // const handleAlcoholicPress = () => {
+    //   if (drink.strAlcoholic === "Alcoholic") {
+    //     navigation.navigate("AlcoholicDrinks");
+    //   } else {
+    //     navigation.navigate("NonAlcoholicDrinks");
+    //   }
+    // };
+  
   
   useEffect(() => {
     handleAlcoholicPress();
