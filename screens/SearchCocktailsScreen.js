@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome"; 
+import * as Icon from "react-native-feather";
 
 const SearchCocktailsScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,6 +32,7 @@ const SearchCocktailsScreen = () => {
     }
     setLoading(false);
   };
+
 
   return (
     <View>
