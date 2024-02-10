@@ -19,7 +19,6 @@ function DetailsScreen({ route, navigation }) {
   console.log("Item extracted from route.params:", idDrink);
   const [isFavorited, setIsFavorited] = useState(false);
   const [drinkDetails, setDrinksDetails] = useState(null);
- 
 
   const fetchDetailsData = async (idDrink) => {
     try {
@@ -28,28 +27,50 @@ function DetailsScreen({ route, navigation }) {
       );
       const data = response.data;
       setDrinksDetails(data.drinks[0]);
-      
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error;
     }
   };
 
+  const checkIfFavorited = async () => {
+    try {
+      const favoritesList = await AsyncStorage.getItem("favorites");
+      if (favoritesList) {
+        const favorites = JSON.parse(favoritesList);
+        const isFav = favorites.some(
+          (favorite) => favorite.idDrink === idDrink
+        );
+        setIsFavorited(isFav);
+      }
+    } catch (error) {
+      console.log("Error checking if favorited:", error);
+    }
+  };
+
   useEffect(() => {
     if (idDrink) {
       fetchDetailsData(idDrink);
+      checkIfFavorited(); // Appel à la fonction pour vérifier si l'élément est favorisé
       console.log("drinkDetailsData: ", drinkDetails);
     }
   }, [idDrink]);
+
+  // useEffect(() => {
+  //   if (idDrink) {
+  //     fetchDetailsData(idDrink);
+  //     console.log("drinkDetailsData: ", drinkDetails);
+  //   }
+  // }, [idDrink]);
 
   const handleAlcoholicPress = () => {
     navigation.navigate("AlcoholicDrinksScreen");
   };
 
-  const handleAddToFavorites = () => {
+  const handleAddToFavorites = async () => {
     console.log("AddToFavorites:", drinkDetails);
     if (drinkDetails) {
-      addToFavorites(drinkDetails);
+      await addToFavorites(drinkDetails);
       setIsFavorited(true);
     }
   };

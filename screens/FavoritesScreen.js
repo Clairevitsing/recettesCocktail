@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   Image,
-  ScrollView,
   FlatList,
   Button,
 } from "react-native";
@@ -14,6 +13,7 @@ import { removeFromFavorites } from "../components/Favorites";
 
 function FavoritesScreen() {
   const [favorites, setFavorites] = useState([]);
+  const [isFavorited, setIsFavorited] = useState(false);
 
   useEffect(() => {
     const getFavorites = async () => {
@@ -28,7 +28,17 @@ function FavoritesScreen() {
     };
 
     getFavorites();
+    // clearAsyncStorage();
   }, []);
+
+  // const clearAsyncStorage = async () => {
+  //   try {
+  //     await AsyncStorage.clear();
+  //     console.log("AsyncStorage cleared successfully");
+  //   } catch (error) {
+  //     console.log("Error clearing AsyncStorage:", error);
+  //   }
+  // };
 
   const handleRemoveFromFavorites = async (item) => {
     try {
@@ -39,6 +49,7 @@ function FavoritesScreen() {
         if (updatedFavoritesList) {
           setFavorites(JSON.parse(updatedFavoritesList));
         }
+        setIsFavorited(false); 
       } else {
         console.log("Error removing from favorites: Invalid item ID");
       }
@@ -48,7 +59,6 @@ function FavoritesScreen() {
   };
 
 const renderFavoriteItem = ({ item, index }) => {
-
 
   // Vérifier si itemId est défini
   if (!item ||!item.idDrink || !item.strDrinkThumb) {

@@ -1,10 +1,7 @@
-
+import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-export const addToFavorites = async ( item) => {
-  
-
+export const addToFavorites = async (item) => {
   try {
     console.log("ItemID before addToFavorites:", item);
 
@@ -24,29 +21,27 @@ export const addToFavorites = async ( item) => {
 
     if (!isAlreadyFavorite) {
       // Si l'élément n'est pas déjà favori, l'ajouter à la liste
-      //favorites.push();
-      const newFavoritesList = [...favorites, item]; 
+      const newFavoritesList = [...favorites, item];
       await AsyncStorage.setItem("favorites", JSON.stringify(newFavoritesList));
     } else {
       console.log("Item is already in favorites");
+      alert("This drink is already in favorites");
     }
   } catch (error) {
     console.log("Error adding to favorites:", error);
   }
 };
 
-
-
-
 export const removeFromFavorites = async (itemId) => {
   try {
-   
     const favoritesList = await AsyncStorage.getItem("favorites");
-    
+
     if (favoritesList) {
       let favorites = JSON.parse(favoritesList);
 
-      const updatedFavorites = favorites.filter(favorite => favorite.idDrink !== itemId);
+      const updatedFavorites = favorites.filter(
+        (favorite) => favorite.idDrink !== itemId
+      );
 
       await AsyncStorage.setItem("favorites", JSON.stringify(updatedFavorites));
 
@@ -58,4 +53,3 @@ export const removeFromFavorites = async (itemId) => {
     console.log("Error removing from favorites:", error);
   }
 };
-

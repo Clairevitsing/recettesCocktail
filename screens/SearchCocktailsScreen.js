@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   View,
@@ -8,21 +9,31 @@ import {
   ActivityIndicator,
   StyleSheet,
   Image,
+  Alert, 
 } from "react-native";
 import * as Icon from "react-native-feather";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
-
+// define SearchCocktailsScreen
 const SearchCocktailsScreen = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQueryByIngredient, setSearchQueryByIngredient] = useState("");
+  const [searchQueryByName, setSearchQueryByName] = useState("");
   const [cocktails, setCocktails] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [drinks, setDrinks] = useState([]);
 
-  const searchCocktails = async () => {
-    setLoading(true);
+  const searchCocktailsByIngredient = async () => {
+    if (!searchQueryByIngredient) {
+      Alert.alert("Please enter an ingredient to search.");
+      return;
+    }
+
+    setIsLoading(true);
     try {
+      setDrinks([]);
+      setCocktails([]);
       const response = await fetch(
-        `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchQuery}`
+        `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchQueryByIngredient}`
       );
       const data = await response.json();
       if (data.drinks) {
@@ -32,30 +43,94 @@ const SearchCocktailsScreen = () => {
       }
     } catch (error) {
       console.error("Error fetching cocktails lors de cherche:", error);
+      Alert.alert("Error fetching cocktails. Please try again later.");
     }
-    setLoading(false);
+    setIsLoading(false);
   };
 
+  const searchCocktailsByName = async () => {
+    if (!searchQueryByName) {
+      Alert.alert("Please enter a name to search.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      setDrinks([]);
+      setCocktails([]);
+      const response = await fetch(
+        `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchQueryByName}`
+      );
+      const data = await response.json();
+      if (data.drinks) {
+        setDrinks(data.drinks);
+      } else {
+        setDrinks([]);
+      }
+    } catch (error) {
+      console.error("Error fetching cocktails lors de cherche:", error);
+      Alert.alert("Error fetching cocktails. Please try again later.");
+    }
+    setIsLoading(false);
+  };
 
   return (
     <View>
+      {/* Search by ingredient */}
       <View style={styles.searchArea}>
-        {/* search bar */}
         <View style={styles.search}>
           <TextInput
-            placeholder="Search Your Favorite Cocktail"
-            onChangeText={(text) => setSearchQuery(text)}
-            value={searchQuery}
+            placeholder="Search Your Favorite Cocktail by Ingredient"
+            onChangeText={(text) => setSearchQueryByIngredient(text)}
+            value={searchQueryByIngredient}
             style={styles.input}
           />
-          <Icon.Search style={styles.searchIcon} onPress={searchCocktails} />
+          <Icon.Search
+            style={styles.searchIcon}
+            onPress={searchCocktailsByIngredient}
+            disabled={isLoading}
+          />
         </View>
       </View>
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
+
+      {/* Search by name */}
+      <View style={styles.searchArea}>
+        <View style={styles.search}>
+          <TextInput
+            placeholder="Search Your Favorite Cocktail By Name"
+            onChangeText={(text) => setSearchQueryByName(text)}
+            value={searchQueryByName}
+            style={styles.input}
+          />
+          <Icon.Search
+            style={styles.searchIcon}
+            onPress={searchCocktailsByName}
+            disabled={isLoading} 
+          />
+        </View>
+      </View>
+
+      {/* Loading indicator */}
+      {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
+
+      {/* Results */}
       <View style={styles.resultsContainer}>
-        <Text>The resultats are as follows:</Text>
+        <Text>The results are as follows:</Text>
         <FlatList
           data={cocktails}
+          keyExtractor={(item) => item.idDrink}
+          renderItem={({ item }) => (
+            <View>
+              <Image
+                source={{ uri: item.strDrinkThumb }}
+                style={styles.image}
+              />
+              <Text>{item.strDrink}</Text>
+            </View>
+          )}
+        />
+        <FlatList
+          data={drinks}
           keyExtractor={(item) => item.idDrink}
           renderItem={({ item }) => (
             <View>
