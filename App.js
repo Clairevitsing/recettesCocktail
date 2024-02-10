@@ -8,6 +8,7 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 import HomeScreen from "./screens/HomeScreen";
 import DetailsScreen from "./screens/DetailsScreen";
 import AlcoholicDrinksScreen from "./screens/AlcoholicDrinksScreen";
+import CategoryScreen from "./screens/CategoryScreen";
 import FavoritesScreen from "./screens/FavoritesScreen";
 import SearchCocktailsScreen from "./screens/SearchCocktailsScreen";
 
@@ -27,6 +28,10 @@ export default function App() {
         <Stack.Screen
           name="AlcoholicDrinksScreen"
           component={AlcoholicDrinksScreen}
+        />
+        <Stack.Screen
+          name="Category"
+          component={CategoryScreen}
         />
         <Stack.Screen name="Favorites" component={FavoritesScreen} />
         <Stack.Screen

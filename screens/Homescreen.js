@@ -18,10 +18,11 @@ import Axios from "axios";
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [drinksData, setDrinksData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(97);
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const randomLetter = (_) =>
-    String.fromCharCode(0 | (Math.random() * 26 + 97));
+   const [searchQuery, setSearchQuery] = useState("");
+  // const randomLetter = (_) =>
+  //   String.fromCharCode(0 | (Math.random() * 26 + 97));
 
   const loadMoreItems = () => {
     setCurrentPage(currentPage + 1);
@@ -43,20 +44,21 @@ const HomeScreen = () => {
     try {
       setIsLoading(true);
       const response = await Axios.get(
-        `http://www.thecocktaildb.com/api/json/v1/1/search.php?f=${randomLetter(
-          currentPage
-        )}`
+        `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail&p=${currentPage}`
       );
-      setDrinksData((prevDrinksData) => [
-        ...prevDrinksData,
-        ...response.data.drinks,
-      ]);
-    } catch (error) {
+      
+        setDrinksData((prevDrinksData) => [
+          ...prevDrinksData,
+          ...response.data.drinks,
+        ]);
+      } catch (error) {
       console.error("Error fetching Cocktail data:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+
 
   return (
     <SafeAreaView style={styles.safeAreaViewContainer}>
@@ -75,7 +77,7 @@ const HomeScreen = () => {
         >
           <Icon.Search style={styles.searchIcon} />
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           title="Favorites list"
           onPress={handleFavoritesList}
@@ -131,7 +133,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 
- 
   search: {
     flexDirection: "row",
     alignItems: "center",

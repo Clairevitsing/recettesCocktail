@@ -67,6 +67,10 @@ function DetailsScreen({ route, navigation }) {
     navigation.navigate("AlcoholicDrinksScreen");
   };
 
+  const handleCategoryPress = () => {
+    navigation.navigate("Category");
+  };
+
   const handleAddToFavorites = async () => {
     console.log("AddToFavorites:", drinkDetails);
     if (drinkDetails) {
@@ -107,7 +111,11 @@ function DetailsScreen({ route, navigation }) {
               Alcoolisé: {drinkDetails.strAlcoholic}
             </Text>
           </TouchableOpacity>
-          <Text style={styles.text}>Catégorie: {drinkDetails.strCategory}</Text>
+          <TouchableOpacity onPress={handleCategoryPress}>
+            <Text style={styles.text}>
+              Category: {drinkDetails.strCategory}
+            </Text>
+          </TouchableOpacity>
           <Text style={styles.text}>Verre: {drinkDetails.strGlass}</Text>
           <Text style={styles.text}>Ingrédients:</Text>
           {Object.keys(drinkDetails).map((key) => {
