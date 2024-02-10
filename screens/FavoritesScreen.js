@@ -1,12 +1,18 @@
-
-import { Text, View, StyleSheet,Image } from "react-native";
-import React, { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  FlatList,
+  Button,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { removeFromFavorites } from "../components/Favorites";
 
-
-function FavoritesScreen () {
-
+function FavoritesScreen() {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
@@ -24,28 +30,83 @@ function FavoritesScreen () {
     getFavorites();
   }, []);
 
+  const handleRemoveFromFavorites = async (item) => {
+    try {
+      if (item) {
+        await removeFromFavorites(item.idDrink);
+        // Mise à jour de la liste des favoris après la suppression
+        const updatedFavoritesList = await AsyncStorage.getItem("favorites");
+        if (updatedFavoritesList) {
+          setFavorites(JSON.parse(updatedFavoritesList));
+        }
+      } else {
+        console.log("Error removing from favorites: Invalid item ID");
+      }
+    } catch (error) {
+      console.log("Error removing from favorites:", error);
+    }
+  };
+
+const renderFavoriteItem = ({ item, index }) => {
+
+
+  // Vérifier si itemId est défini
+  if (!item ||!item.idDrink || !item.strDrinkThumb) {
+    return (
+      <View>
+        <Text>Item invalide</Text>
+      </View>
+    );
+  }
+
+  // Extraire les propriétés idDrink et strDrinkThumb de itemId
+  const { idDrink, strDrinkThumb } = item;
+
+  // Retourner l'élément avec les propriétés extraites
   return (
-    <View>
-      <Text>Favorites:</Text>
-      {favorites.map(
-        (item, index) =>
-          item && (
-             //ensure that each key in the list is unique
-            <View key={`${item.idDrink}-${index}`}>
-              <Image
-                source={{ uri: item.strDrinkThumb }}
-                style={styles.image}
-              />
-              <Text key={index}> {item.strDrink}</Text>
-            </View>
-          )
-      )}
+    <View key={idDrink}>
+      <Image source={{ uri: strDrinkThumb }} style={styles.image} />
+      <Text>{idDrink}</Text>
+      <Button
+        title="Remove"
+        onPress={() => handleRemoveFromFavorites(item)}
+      />
     </View>
-  ); 
+  );
 };
 
 
+  return (
+    <FlatList
+      data={favorites}
+      renderItem={renderFavoriteItem}
+      keyExtractor={(item, index) => `${item.idDrink}-${index}`}
+      ListHeaderComponent={<Text>Favorites:</Text>}
+    />
+  );
+}
+
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  itemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  textContainer: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  text: {
+    fontSize: 16,
+  },
+  button: {
+    marginLeft: "auto",
+  },
   image: {
     width: hp(30),
     height: hp(30),
@@ -54,8 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
 export default FavoritesScreen;
-
-
-

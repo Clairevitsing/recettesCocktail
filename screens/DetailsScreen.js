@@ -1,45 +1,59 @@
+import axios from "axios";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import {
-  Button,
+  ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   Image,
-  ScrollView,
-  TouchableOpacity,
 } from "react-native";
-import * as React from "react";
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
-import * as Icon from "react-native-feather";
 import * as Icons from "react-native-heroicons/solid";
-import { useState, useEffect } from "react";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import {addToFavorites} from "../components/Favorites";
-
-
-
-
+import { addToFavorites } from "../components/Favorites";
 
 function DetailsScreen({ route, navigation }) {
-  console.log("Received props:", { route, navigation });
-  console.log("Données de la boisson:", drink);
-  // Get the drink object passed from navigation
-  
-  const { drink } = route.params;
+  const { idDrink, drink } = route.params;
+  console.log("Item extracted from route.params:", idDrink);
   const [isFavorited, setIsFavorited] = useState(false);
+  const [drinkDetails, setDrinksDetails] = useState(null);
+ 
+
+  const fetchDetailsData = async (idDrink) => {
+    try {
+      const response = await axios.get(
+        `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${idDrink}`
+      );
+      const data = response.data;
+      setDrinksDetails(data.drinks[0]);
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    if (idDrink) {
+      fetchDetailsData(idDrink);
+      console.log("drinkDetailsData: ", drinkDetails);
+    }
+  }, [idDrink]);
 
   const handleAlcoholicPress = () => {
-  navigation.navigate("AlcoholicDrinksScreen"); 
-};
-
-  const handleAddToFavorites = ({ }) => { 
-    addToFavorites(drink);
-     setIsFavorited(true);
+    navigation.navigate("AlcoholicDrinksScreen");
   };
-  
-  useEffect(() => {
-    handleAlcoholicPress();
-  }, []);
-  
+
+  const handleAddToFavorites = () => {
+    console.log("AddToFavorites:", drinkDetails);
+    if (drinkDetails) {
+      addToFavorites(drinkDetails);
+      setIsFavorited(true);
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.contentContainer}>
       <View style={styles.barIcon}>
@@ -50,7 +64,8 @@ function DetailsScreen({ route, navigation }) {
           <ChevronLeftIcon />
         </TouchableOpacity>
         <TouchableOpacity
-          title="Save to Favorites" onPress={handleAddToFavorites}
+          title="Add to Favorites"
+          onPress={handleAddToFavorites}
           style={styles.heartIconArea}
         >
           <Icons.HeartIcon
@@ -58,32 +73,41 @@ function DetailsScreen({ route, navigation }) {
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.description}>
-        <Image source={{ uri: drink.strDrinkThumb }} style={styles.image} />
-        <Text style={styles.text}>{drink.strDrink}</Text>
-        <Text style={styles.text}>{drink.idDrink}</Text>
-        <TouchableOpacity onPress={handleAlcoholicPress}>
-          <Text style={styles.text}>
-            Alcoolisé: {drink.strAlcoholic}
-          </Text>
-        </TouchableOpacity>
-        <Text style={styles.text}>Catégorie: {drink.strCategory}</Text>
-        <Text style={styles.text}>Verre: {drink.strGlass}</Text>
-        <Text style={styles.text}>Ingrédients:</Text>
-        {Object.keys(drink).map((key) => {
-          if (key.startsWith("strIngredient") && drink[key]) {
-            return (
-              <View key={key} style={styles.ingredientItem}>
-                <View style={styles.pinkSquare}></View>
-                <View style={styles.ingredientTextContainer}>
-                  <Text style={styles.ingredientText}>{drink[key]}</Text>
+      {drinkDetails && (
+        <View style={styles.description}>
+          <Image
+            source={{ uri: drinkDetails.strDrinkThumb }}
+            style={styles.image}
+          />
+          <Text style={styles.text}>{drinkDetails.strDrink}</Text>
+          <Text style={styles.text}>{drinkDetails.idDrink}</Text>
+          <TouchableOpacity onPress={handleAlcoholicPress}>
+            <Text style={styles.text}>
+              Alcoolisé: {drinkDetails.strAlcoholic}
+            </Text>
+          </TouchableOpacity>
+          <Text style={styles.text}>Catégorie: {drinkDetails.strCategory}</Text>
+          <Text style={styles.text}>Verre: {drinkDetails.strGlass}</Text>
+          <Text style={styles.text}>Ingrédients:</Text>
+          {Object.keys(drinkDetails).map((key) => {
+            if (key.startsWith("strIngredient") && drinkDetails[key]) {
+              return (
+                <View key={key} style={styles.ingredientItem}>
+                  <View style={styles.pinkSquare}></View>
+                  <View style={styles.ingredientTextContainer}>
+                    <Text style={styles.ingredientText}>
+                      {drinkDetails[key]}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            );
-          }
-        })}
-        <Text style={styles.text}>Instructions: {drink.strInstructions}</Text>
-      </View>
+              );
+            }
+          })}
+          <Text style={styles.text}>
+            Instructions: {drinkDetails.strInstructions}
+          </Text>
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -113,12 +137,6 @@ const styles = StyleSheet.create({
     borderRadius: 500,
     justifyContent: "center",
     alignItems: "center",
-  },
-  chevronLeftIcon: {
-    width: hp(5),
-    height: hp(5),
-    size: 15,
-    borderRadius: 20,
   },
   heartIconArea: {
     backgroundColor: "#FFB6C1",
@@ -167,7 +185,7 @@ const styles = StyleSheet.create({
   },
   underline: {
     textDecorationLine: "underline",
-  }
+  },
 });
 
 export default DetailsScreen;

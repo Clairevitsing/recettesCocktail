@@ -13,14 +13,17 @@ import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
-const DrinkList = ({ drinksData, navigation,loadMoreItems }) => {
-  const [isFavorited, setIsFavorited] = useState(false);
+const DrinkList = ({ drinksData, loadMoreItems }) => {
+  const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
-   
-  
-    const handleLoadMore = () => {
-      loadMoreItems(); 
-    };
+
+  const handleLoadMore = () => {
+    loadMoreItems();
+  };
+
+  const handleDetailsNavigation = (idDrink) => {
+    navigation.navigate("Details",{ idDrink });
+  };
 
   const renderLoader = () => {
     return isLoading ? (
@@ -29,7 +32,6 @@ const DrinkList = ({ drinksData, navigation,loadMoreItems }) => {
       </View>
     ) : null;
   };
-
 
   if (!drinksData) {
     return (
@@ -45,19 +47,21 @@ const DrinkList = ({ drinksData, navigation,loadMoreItems }) => {
           data={drinksData}
           renderItem={({ item }) => (
             <View style={styles.itemContainer}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Details", { drink: item })}
-              >
-                <Image
-                  source={{ uri: item.strDrinkThumb }}
-                  style={styles.image}
-                />
-              </TouchableOpacity>
+              <Image
+                source={{ uri: item.strDrinkThumb }}
+                style={styles.image}
+              />
+
               <View style={styles.informations}>
                 <View style={styles.name}>
                   <Text style={styles.text}>{item.strDrink}</Text>
                 </View>
-                <Icons.HeartIcon style={styles.heartIcon}/>
+                <TouchableOpacity
+                  onPress={()=>handleDetailsNavigation(item.idDrink)}
+                  style={styles.detailsLink}
+                >
+                  <Text>More Details</Text>
+                </TouchableOpacity>
               </View>
             </View>
           )}
@@ -103,12 +107,11 @@ const styles = {
     alignItems: "center",
   },
   name: {
-    flex: 1, 
+    flex: 1,
   },
   heartIcon: {
-    marginLeft: 10, 
+    marginLeft: 10,
   },
-
 };
 
 export default DrinkList;

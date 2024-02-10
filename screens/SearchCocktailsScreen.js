@@ -7,8 +7,11 @@ import {
   Text,
   ActivityIndicator,
   StyleSheet,
+  Image,
 } from "react-native";
 import * as Icon from "react-native-feather";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+
 
 const SearchCocktailsScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,7 +31,7 @@ const SearchCocktailsScreen = () => {
         setCocktails([]);
       }
     } catch (error) {
-      console.error("Error fetching cocktails:", error);
+      console.error("Error fetching cocktails lors de cherche:", error);
     }
     setLoading(false);
   };
@@ -49,11 +52,22 @@ const SearchCocktailsScreen = () => {
         </View>
       </View>
       {loading && <ActivityIndicator size="large" color="#0000ff" />}
-      <FlatList
-        data={cocktails}
-        keyExtractor={(item) => item.idDrink}
-        renderItem={({ item }) => <Text>{item.strDrink}</Text>}
-      />
+      <View style={styles.resultsContainer}>
+        <Text>The resultats are as follows:</Text>
+        <FlatList
+          data={cocktails}
+          keyExtractor={(item) => item.idDrink}
+          renderItem={({ item }) => (
+            <View>
+              <Image
+                source={{ uri: item.strDrinkThumb }}
+                style={styles.image}
+              />
+              <Text>{item.strDrink}</Text>
+            </View>
+          )}
+        />
+      </View>
     </View>
   );
 };
@@ -75,6 +89,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "gray",
     borderRadius: 5,
+  },
+  image: {
+    width: hp(30),
+    height: hp(30),
+    borderRadius: 50,
+    marginBottom: 10,
   },
   input: {
     flex: 1,
