@@ -11,8 +11,8 @@ const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
   return (
     <Tab.Navigator
-      tabBarOptions={{
-        showLabel: false, 
+      screenOptions={{
+        tabBarShowLabel: false,
         style: {
           position: "absolute",
           bottom: 25,
@@ -22,7 +22,7 @@ const TabNavigator = () => {
           backgroundColor: "#FFFFFF",
           borderRadius: 15,
           height: 90,
-          ...styles.shadow, 
+          ...styles.shadow,
         },
       }}
     >
@@ -44,7 +44,7 @@ const TabNavigator = () => {
               <Text
                 style={{
                   color: focused ? "#e32f45" : "#748c94",
-                  fontSize: 12, 
+                  fontSize: 12, // Correct spelling for fontSize
                 }}
               >
                 HOME
@@ -71,7 +71,7 @@ const TabNavigator = () => {
               <Text
                 style={{
                   color: focused ? "#e32f45" : "#748c94",
-                  fontSize: 12, 
+                  fontSize: 12,
                 }}
               >
                 FIND
@@ -98,7 +98,7 @@ const TabNavigator = () => {
               <Text
                 style={{
                   color: focused ? "#e32f45" : "#748c94",
-                  fontSize: 12, 
+                  fontSize: 12,
                 }}
               >
                 FAVORITES
