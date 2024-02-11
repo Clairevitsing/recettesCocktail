@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, LogBox,Text, View } from "react-native";
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -11,38 +11,36 @@ import AlcoholicDrinksScreen from "./screens/AlcoholicDrinksScreen";
 import CategoryScreen from "./screens/CategoryScreen";
 import FavoritesScreen from "./screens/FavoritesScreen";
 import SearchCocktailsScreen from "./screens/SearchCocktailsScreen";
+import TabNavigator from "./navigation/TabNavigator";
 
 const Stack = createNativeStackNavigator();
 
+
+LogBox.ignoreLogs(
+  [
+    'Non-serializable values were found in the navigation state'
+  ]
+)
 export default function App() {
   return (
     <NavigationContainer>
       {/* initialRouteName="Home" pour définir la route par défault */}
       <Stack.Navigator initialRouteName="Welcome">
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        {/* // c'est une option, on peut essayer, par exemple il y a aussi une option "welcome"
-          options={{ title: 'Overview' }}
-        /> */}
+        {/* <Stack.Screen name="Welcome" component={WelcomeScreen} /> */}
+        <Stack.Screen name=" " component={TabNavigator} />
         <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen
           name="AlcoholicDrinksScreen"
           component={AlcoholicDrinksScreen}
         />
-        <Stack.Screen
-          name="Category"
-          component={CategoryScreen}
-        />
-        <Stack.Screen name="Favorites" component={FavoritesScreen} />
-        <Stack.Screen
-          name="SearchCocktails"
-          component={SearchCocktailsScreen}
-        />
+        <Stack.Screen name="Category" component={CategoryScreen} />
         {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+
 
 
 const styles = StyleSheet.create({

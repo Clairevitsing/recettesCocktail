@@ -60,7 +60,7 @@ const DrinkList = ({ drinksData, loadMoreItems }) => {
                   onPress={()=>handleDetailsNavigation(item.idDrink)}
                   style={styles.detailsLink}
                 >
-                  <Text>More Details</Text>
+                  <Text style={styles.moreLink}>Learn More</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -109,8 +109,9 @@ const styles = {
   name: {
     flex: 1,
   },
-  heartIcon: {
-    marginLeft: 10,
+  moreLink: {
+    textDecorationLine: "underline",
+    color:"blue"
   },
 };
 

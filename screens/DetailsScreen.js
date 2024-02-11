@@ -51,7 +51,7 @@ function DetailsScreen({ route, navigation }) {
   useEffect(() => {
     if (idDrink) {
       fetchDetailsData(idDrink);
-      checkIfFavorited(); // Appel à la fonction pour vérifier si l'élément est favorisé
+      checkIfFavorited();
       console.log("drinkDetailsData: ", drinkDetails);
     }
   }, [idDrink]);
@@ -90,11 +90,15 @@ function DetailsScreen({ route, navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           title="Add to Favorites"
-          onPress={handleAddToFavorites}
+          onPress={() => {
+            handleAddToFavorites();
+            setIsFavorited(!isFavorited);
+          }}
           style={styles.heartIconArea}
         >
           <Icons.HeartIcon
-            style={[styles.heartIcon, isFavorited && styles.favoritedColor]}
+            // style={[styles.heartIcon, isFavorited && styles.favoritedColor]}
+            style={[styles.heartIcon, { color: isFavorited ? "red" : "gray" }]}
           />
         </TouchableOpacity>
       </View>
@@ -189,9 +193,9 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 10,
   },
-  favoritedColor: {
-    color: "red",
-  },
+  // favoritedColor: {
+  //   color: "red",
+  // },
   ingredientItem: {
     flexDirection: "row",
     alignItems: "center",
