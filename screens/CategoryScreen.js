@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  SafeAreaView,
   StyleSheet,
   View,
   FlatList,
@@ -54,9 +55,9 @@ const CategoryScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeAreaViewContainer}>
       {cocktailData && cocktailData.length > 0 ? (
-        <View>
+        <View style={styles.categoryContainer}>
           <Text style={styles.text}>Cocktail</Text>
           <FlatList
             data={cocktailData}
@@ -76,14 +77,17 @@ const CategoryScreen = () => {
           />
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
-  container: {
+  safeAreaViewContainer: {
     flex: 1,
-    justifyContent: "center",
+  },
+  categoryContainer: {
+    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
   },
   text: {
     fontSize: 20,

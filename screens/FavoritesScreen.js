@@ -1,11 +1,4 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  FlatList,
-  Button,
-} from "react-native";
+import { Text, View, StyleSheet, Image, FlatList, Button } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -28,6 +21,12 @@ function FavoritesScreen() {
     };
 
     getFavorites();
+
+    const intervalId = setInterval(() => {
+      getFavorites();
+    }, 1000);
+    
+    return () => clearInterval(intervalId);
     // clearAsyncStorage();
   }, []);
 
@@ -49,7 +48,7 @@ function FavoritesScreen() {
         if (updatedFavoritesList) {
           setFavorites(JSON.parse(updatedFavoritesList));
         }
-        setIsFavorited(false); 
+        setIsFavorited(false);
       } else {
         console.log("Error removing from favorites: Invalid item ID");
       }
@@ -58,33 +57,31 @@ function FavoritesScreen() {
     }
   };
 
-const renderFavoriteItem = ({ item, index }) => {
+  const renderFavoriteItem = ({ item, index }) => {
+    // Vérifier si itemId est défini
+    if (!item || !item.idDrink || !item.strDrinkThumb) {
+      return (
+        <View>
+          <Text>Item invalide</Text>
+        </View>
+      );
+    }
 
-  // Vérifier si itemId est défini
-  if (!item ||!item.idDrink || !item.strDrinkThumb) {
+    // Extraire les propriétés idDrink et strDrinkThumb de itemId
+    const { idDrink, strDrinkThumb } = item;
+
+    // Retourner l'élément avec les propriétés extraites
     return (
-      <View>
-        <Text>Item invalide</Text>
+      <View key={idDrink}>
+        <Image source={{ uri: strDrinkThumb }} style={styles.image} />
+        <Text>{idDrink}</Text>
+        <Button
+          title="Remove"
+          onPress={() => handleRemoveFromFavorites(item)}
+        />
       </View>
     );
-  }
-
-  // Extraire les propriétés idDrink et strDrinkThumb de itemId
-  const { idDrink, strDrinkThumb } = item;
-
-  // Retourner l'élément avec les propriétés extraites
-  return (
-    <View key={idDrink}>
-      <Image source={{ uri: strDrinkThumb }} style={styles.image} />
-      <Text>{idDrink}</Text>
-      <Button
-        title="Remove"
-        onPress={() => handleRemoveFromFavorites(item)}
-      />
-    </View>
-  );
-};
-
+  };
 
   return (
     <FlatList

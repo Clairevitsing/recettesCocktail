@@ -30,7 +30,6 @@ const TabNavigator = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          // Correct spelling for options
           tabBarIcon: ({ focused }) => (
             <View
               style={{
@@ -45,7 +44,7 @@ const TabNavigator = () => {
               <Text
                 style={{
                   color: focused ? "#e32f45" : "#748c94",
-                  fontSize: 12, // Correct spelling for fontSize
+                  fontSize: 12, 
                 }}
               >
                 HOME
@@ -58,7 +57,6 @@ const TabNavigator = () => {
         name="SearchCocktails"
         component={SearchCocktailsScreen}
         options={{
-          // Correct spelling for options
           tabBarIcon: ({ focused }) => (
             <View
               style={{
@@ -73,7 +71,7 @@ const TabNavigator = () => {
               <Text
                 style={{
                   color: focused ? "#e32f45" : "#748c94",
-                  fontSize: 12, // Correct spelling for fontSize
+                  fontSize: 12, 
                 }}
               >
                 FIND

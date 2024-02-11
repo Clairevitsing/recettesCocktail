@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  SafeAreaView,
   StyleSheet,
   View,
   FlatList,
@@ -54,36 +55,39 @@ const AlcoholicDrinksScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
-            {alcoholicDrinksData && alcoholicDrinksData.length > 0 ? (
-                <View>
-                    <Text style={styles.text}>Boissons alcoolisées</Text>
-                    <FlatList
-                        data={alcoholicDrinksData}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.idDrink}
-                        ListFooterComponent={renderLoader}
-                    />
-                </View>
-            ) : (
-                <View>
-                    <Text style={styles.text}>Boissons non alcoolisées</Text>
-                    <FlatList
-                        data={nonAlcoholicDrinksData}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.idDrink}
-                        ListFooterComponent={renderLoader}
-                    />
-                </View>
-            )}
-        </View>
+      <SafeAreaView style={styles.safeAreaViewContainer}>
+        {alcoholicDrinksData && alcoholicDrinksData.length > 0 ? (
+          <View style={styles.alcoholicContainer}>
+            <Text style={styles.text}>Boissons alcoolisées</Text>
+            <FlatList
+              data={alcoholicDrinksData}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.idDrink}
+              ListFooterComponent={renderLoader}
+            />
+          </View>
+        ) : (
+          <View style={styles.alcoholicContainer}>
+            <Text style={styles.text}>Boissons non alcoolisées</Text>
+            <FlatList
+              data={nonAlcoholicDrinksData}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.idDrink}
+              ListFooterComponent={renderLoader}
+            />
+          </View>
+        )}
+      </SafeAreaView>
     );
 }
 const styles = StyleSheet.create({
-  container: {
+  safeAreaViewContainer: {
     flex: 1,
-    justifyContent: "center",
+  },
+  alcoholicContainer: {
+    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
   },
   text: {
     fontSize: 20,

@@ -12,13 +12,15 @@ import {
 import { ChevronLeftIcon } from "react-native-heroicons/outline";
 import * as Icons from "react-native-heroicons/solid";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { addToFavorites } from "../components/Favorites";
+import { addToFavorites, removeFromFavorites } from "../components/Favorites";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function DetailsScreen({ route, navigation }) {
   const { idDrink, drink } = route.params;
   console.log("Item extracted from route.params:", idDrink);
-  const [isFavorited, setIsFavorited] = useState(false);
+  const [isFavorited, setIsFavorited] = useState();
   const [drinkDetails, setDrinksDetails] = useState(null);
+  const [favorites, setFavorites] = useState([]);
 
   const fetchDetailsData = async (idDrink) => {
     try {
@@ -36,12 +38,14 @@ function DetailsScreen({ route, navigation }) {
   const checkIfFavorited = async () => {
     try {
       const favoritesList = await AsyncStorage.getItem("favorites");
+      // console.log("favoritesList", favoritesList);
       if (favoritesList) {
         const favorites = JSON.parse(favoritesList);
-        const isFav = favorites.some(
+        const isFavorited = favorites.some(
           (favorite) => favorite.idDrink === idDrink
         );
-        setIsFavorited(isFav);
+        setIsFavorited(isFavorited);
+        // console.log("Favorited", isFavorited);
       }
     } catch (error) {
       console.log("Error checking if favorited:", error);
@@ -56,13 +60,6 @@ function DetailsScreen({ route, navigation }) {
     }
   }, [idDrink]);
 
-  // useEffect(() => {
-  //   if (idDrink) {
-  //     fetchDetailsData(idDrink);
-  //     console.log("drinkDetailsData: ", drinkDetails);
-  //   }
-  // }, [idDrink]);
-
   const handleAlcoholicPress = () => {
     navigation.navigate("AlcoholicDrinksScreen");
   };
@@ -72,10 +69,34 @@ function DetailsScreen({ route, navigation }) {
   };
 
   const handleAddToFavorites = async () => {
-    console.log("AddToFavorites:", drinkDetails);
     if (drinkDetails) {
       await addToFavorites(drinkDetails);
       setIsFavorited(true);
+    }
+  };
+
+  // const handleRemoveFromFavorites = async () => {
+  //   if (drinkDetails) {
+  //     await removeFromFavorites(drinkDetails);
+  //     setIsFavorited(false);
+  //   }
+  // };
+
+  const handleRemoveFromFavorites = async (item) => {
+    try {
+      if (item) {
+        await removeFromFavorites(item.idDrink);
+        // Mise à jour de la liste des favoris après la suppression
+        const updatedFavoritesList = await AsyncStorage.getItem("favorites");
+        if (updatedFavoritesList) {
+          setFavorites(JSON.parse(updatedFavoritesList));
+        }
+        setIsFavorited(false);
+      } else {
+        console.log("Error removing from favorites: Invalid item ID");
+      }
+    } catch (error) {
+      console.log("Error removing from favorites:", error);
     }
   };
 
@@ -91,7 +112,11 @@ function DetailsScreen({ route, navigation }) {
         <TouchableOpacity
           title="Add to Favorites"
           onPress={() => {
-            handleAddToFavorites();
+            if (isFavorited) {
+              handleRemoveFromFavorites(drinkDetails);
+            } else {
+              handleAddToFavorites();
+            }
             setIsFavorited(!isFavorited);
           }}
           style={styles.heartIconArea}

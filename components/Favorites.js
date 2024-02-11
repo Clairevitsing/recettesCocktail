@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const addToFavorites = async (item) => {
   try {
-    console.log("ItemID before addToFavorites:", item);
+    // console.log("ItemID before addToFavorites:", item);
 
     if (!item || !item.idDrink) {
       console.log("Item ID is null or undefined");
@@ -11,7 +11,7 @@ export const addToFavorites = async (item) => {
     }
 
     const favoritesList = await AsyncStorage.getItem("favorites");
-    console.log("favorites list:", favoritesList);
+    // console.log("favorites list:", favoritesList);
     let favorites = favoritesList ? JSON.parse(favoritesList) : [];
 
     // Vérifier si l'élément est déjà favori
@@ -25,7 +25,6 @@ export const addToFavorites = async (item) => {
       await AsyncStorage.setItem("favorites", JSON.stringify(newFavoritesList));
     } else {
       console.log("Item is already in favorites");
-      alert("This drink is already in favorites");
     }
   } catch (error) {
     console.log("Error adding to favorites:", error);
@@ -42,7 +41,7 @@ export const removeFromFavorites = async (itemId) => {
       const updatedFavorites = favorites.filter(
         (favorite) => favorite.idDrink !== itemId
       );
-
+      console.log("updatedFavoritesAfterRemove", updatedFavorites);
       await AsyncStorage.setItem("favorites", JSON.stringify(updatedFavorites));
 
       console.log("Item removed from favorites successfully");
