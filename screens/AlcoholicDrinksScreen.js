@@ -50,7 +50,9 @@ const AlcoholicDrinksScreen = () => {
 
     const renderLoader = () => {
         return isLoading ? (
+          <View style={[styles.loadingContainer, styles.horizontal]}>
             <ActivityIndicator size="large" color="#0000ff" />
+          </View>
         ) : null;
     };
 
@@ -58,7 +60,7 @@ const AlcoholicDrinksScreen = () => {
       <SafeAreaView style={styles.safeAreaViewContainer}>
         {alcoholicDrinksData && alcoholicDrinksData.length > 0 ? (
           <View style={styles.alcoholicContainer}>
-            <Text style={styles.text}>Boissons alcoolisées</Text>
+            <Text style={styles.text}>Alcoholic Drinks</Text>
             <FlatList
               data={alcoholicDrinksData}
               renderItem={renderItem}
@@ -68,7 +70,7 @@ const AlcoholicDrinksScreen = () => {
           </View>
         ) : (
           <View style={styles.alcoholicContainer}>
-            <Text style={styles.text}>Boissons non alcoolisées</Text>
+            <Text style={styles.text}>Non-alcoholic drinks</Text>
             <FlatList
               data={nonAlcoholicDrinksData}
               renderItem={renderItem}
@@ -88,6 +90,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
   },
   text: {
     fontSize: 20,

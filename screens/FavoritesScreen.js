@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Image, FlatList, Button } from "react-native";
+import { Text, View,SafeAreaView, StyleSheet, Image, FlatList, Button } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -22,6 +22,7 @@ function FavoritesScreen() {
 
     getFavorites();
 
+    //refrech automatically
     const intervalId = setInterval(() => {
       getFavorites();
     }, 1000);
@@ -68,13 +69,13 @@ function FavoritesScreen() {
     }
 
     // Extraire les propriétés idDrink et strDrinkThumb de itemId
-    const { idDrink, strDrinkThumb } = item;
+    const { idDrink, strDrink, strDrinkThumb } = item;
 
     // Retourner l'élément avec les propriétés extraites
     return (
       <View key={idDrink}>
         <Image source={{ uri: strDrinkThumb }} style={styles.image} />
-        <Text>{idDrink}</Text>
+        <Text>{strDrink}</Text>
         <Button
           title="Remove"
           onPress={() => handleRemoveFromFavorites(item)}
@@ -84,16 +85,27 @@ function FavoritesScreen() {
   };
 
   return (
-    <FlatList
-      data={favorites}
-      renderItem={renderFavoriteItem}
-      keyExtractor={(item, index) => `${item.idDrink}-${index}`}
-      ListHeaderComponent={<Text>Favorites:</Text>}
-    />
+    <SafeAreaView style={styles.safeAreaViewContainer}>
+      <View style={styles.favoritesContainer}>
+        <FlatList
+          data={favorites}
+          renderItem={renderFavoriteItem}
+          keyExtractor={(item, index) => `${item.idDrink}`}
+          ListHeaderComponent={<Text>Favorites:</Text>}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeAreaViewContainer: {
+    flex: 1,
+  },
+  favoritesContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   title: {
     fontSize: 20,
     fontWeight: "bold",

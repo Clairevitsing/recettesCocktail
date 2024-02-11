@@ -22,7 +22,7 @@ const DrinkList = ({ drinksData, loadMoreItems }) => {
   };
 
   const handleDetailsNavigation = (idDrink) => {
-    navigation.navigate("Details",{ idDrink });
+    navigation.navigate("Details", { idDrink });
   };
 
   const renderLoader = () => {
@@ -35,7 +35,7 @@ const DrinkList = ({ drinksData, loadMoreItems }) => {
 
   if (!drinksData) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={[styles.loadingContainer, styles.horizontal]}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
@@ -57,7 +57,7 @@ const DrinkList = ({ drinksData, loadMoreItems }) => {
                   <Text style={styles.text}>{item.strDrink}</Text>
                 </View>
                 <TouchableOpacity
-                  onPress={()=>handleDetailsNavigation(item.idDrink)}
+                  onPress={() => handleDetailsNavigation(item.idDrink)}
                   style={styles.detailsLink}
                 >
                   <Text style={styles.moreLink}>Learn More</Text>
@@ -84,7 +84,11 @@ const styles = {
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
   },
   cocktailContainer: {
     justifyContent: "center",
@@ -111,7 +115,7 @@ const styles = {
   },
   moreLink: {
     textDecorationLine: "underline",
-    color:"blue"
+    color: "blue",
   },
 };
 

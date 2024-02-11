@@ -44,7 +44,7 @@ const TabNavigator = () => {
               <Text
                 style={{
                   color: focused ? "#e32f45" : "#748c94",
-                  fontSize: 12, // Correct spelling for fontSize
+                  fontSize: 12, 
                 }}
               >
                 HOME

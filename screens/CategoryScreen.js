@@ -50,7 +50,9 @@ const CategoryScreen = () => {
 
   const renderLoader = () => {
     return isLoading ? (
-      <ActivityIndicator size="large" color="#0000ff" />
+      <View style={[styles.loadingContainer, styles.horizontal]}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
     ) : null;
   };
 
@@ -88,6 +90,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
   },
   text: {
     fontSize: 20,

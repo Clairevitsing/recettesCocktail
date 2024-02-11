@@ -1,30 +1,45 @@
-
 import React, { useState } from "react";
 import {
+  SafeAreaView,
   View,
   TextInput,
-  Button,
   FlatList,
   Text,
   ActivityIndicator,
   StyleSheet,
   Image,
-  Alert, 
+  Modal,
+  Button,
 } from "react-native";
 import * as Icon from "react-native-feather";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
-// define SearchCocktailsScreen
 const SearchCocktailsScreen = () => {
   const [searchQueryByIngredient, setSearchQueryByIngredient] = useState("");
   const [searchQueryByName, setSearchQueryByName] = useState("");
   const [cocktails, setCocktails] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [drinks, setDrinks] = useState([]);
+  const [isErrorModalVisible, setIsErrorModalVisible] = useState(false);
+  const [isNoResultModalVisible, setIsNoResultModalVisible] = useState(false);
+  const [isEmptyInputModalVisible, setIsEmptyInputModalVisible] =
+    useState(false);
+
+  const toggleErrorModal = () => {
+    setIsErrorModalVisible(!isErrorModalVisible);
+  };
+
+  const toggleNoResultModal = () => {
+    setIsNoResultModalVisible(!isNoResultModalVisible);
+  };
+
+  const toggleEmptyInputModal = () => {
+    setIsEmptyInputModalVisible(!isEmptyInputModalVisible);
+  };
 
   const searchCocktailsByIngredient = async () => {
     if (!searchQueryByIngredient) {
-      Alert.alert("Please enter an ingredient to search.");
+      toggleEmptyInputModal();
       return;
     }
 
@@ -40,17 +55,18 @@ const SearchCocktailsScreen = () => {
         setCocktails(data.drinks);
       } else {
         setCocktails([]);
+        toggleNoResultModal();
       }
     } catch (error) {
       console.error("Error fetching cocktails lors de cherche:", error);
-      Alert.alert("Error fetching cocktails. Please try again later.");
+      toggleErrorModal();
     }
     setIsLoading(false);
   };
 
   const searchCocktailsByName = async () => {
     if (!searchQueryByName) {
-      Alert.alert("Please enter a name to search.");
+      toggleEmptyInputModal();
       return;
     }
 
@@ -66,16 +82,17 @@ const SearchCocktailsScreen = () => {
         setDrinks(data.drinks);
       } else {
         setDrinks([]);
+        toggleNoResultModal();
       }
     } catch (error) {
-      console.error("Error fetching cocktails lors de cherche:", error);
-      Alert.alert("Error fetching cocktails. Please try again later.");
+      //console.error("Error fetching cocktails lors de cherche:", error);
+      toggleErrorModal();
     }
     setIsLoading(false);
   };
 
   return (
-    <View>
+    <SafeAreaView style={styles.safeAreaViewContainer}>
       {/* Search by ingredient */}
       <View style={styles.searchArea}>
         <View style={styles.search}>
@@ -105,7 +122,7 @@ const SearchCocktailsScreen = () => {
           <Icon.Search
             style={styles.searchIcon}
             onPress={searchCocktailsByName}
-            disabled={isLoading} 
+            disabled={isLoading}
           />
         </View>
       </View>
@@ -115,7 +132,9 @@ const SearchCocktailsScreen = () => {
 
       {/* Results */}
       <View style={styles.resultsContainer}>
-        <Text>The results are as follows:</Text>
+        {cocktails.length > 0 || drinks.length > 0 ? (
+          <Text>The results are as follows:</Text>
+        ) : null}
         <FlatList
           data={cocktails}
           keyExtractor={(item) => item.idDrink}
@@ -143,11 +162,64 @@ const SearchCocktailsScreen = () => {
           )}
         />
       </View>
-    </View>
+
+      {/* Error Modal */}
+      <Modal
+        visible={isErrorModalVisible}
+        transparent={true}
+        animationType="slide"
+      >
+        <View style={styles.modalContainer}>
+          <View style={[styles.modalContent, styles.errorBackground]}>
+            <Text style={styles.modalText}>
+              Error fetching cocktails. Please try again later.
+            </Text>
+            <Button title="Close" onPress={toggleErrorModal} color="white" />
+          </View>
+        </View>
+      </Modal>
+
+      {/* No Result Modal */}
+      <Modal
+        visible={isNoResultModalVisible}
+        transparent={true}
+        animationType="slide"
+      >
+        <View style={styles.modalContainer}>
+          <View style={[styles.modalContent, styles.errorBackground]}>
+            <Text style={styles.modalText}>
+              No results found. Please try again with different input.
+            </Text>
+            <Button title="Close" onPress={toggleNoResultModal} color="white" />
+          </View>
+        </View>
+      </Modal>
+
+      {/* Empty Input Modal */}
+      <Modal
+        visible={isEmptyInputModalVisible}
+        transparent={true}
+        animationType="slide"
+      >
+        <View style={styles.modalContainer}>
+          <View style={[styles.modalContent, styles.errorBackground]}>
+            <Text style={styles.modalText}>Please enter a valid input.</Text>
+            <Button
+              title="Close"
+              onPress={toggleEmptyInputModal}
+              color="white"
+            />
+          </View>
+        </View>
+      </Modal>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeAreaViewContainer: {
+    flex: 1,
+  },
   searchArea: {
     flexDirection: "row",
     alignItems: "center",
@@ -165,6 +237,20 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderRadius: 5,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
+  },
+  resultsContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   image: {
     width: hp(30),
     height: hp(30),
@@ -178,6 +264,26 @@ const styles = StyleSheet.create({
   searchIcon: {
     fontSize: 20,
     color: "gray",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "red",
+    padding: 22,
+    borderRadius: 4,
+    alignItems: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    color: "white",
+  },
+  errorBackground: {
+    backgroundColor: "green",
   },
 });
 
