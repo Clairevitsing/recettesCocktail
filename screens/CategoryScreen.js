@@ -13,6 +13,7 @@ const CategoryScreen = () => {
   const [ordinaryDrinkData, setOrdinaryDrinkData] = useState([]);
   const [cocktailData, setCocktailData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("Cocktail"); 
 
   const fetchDrinksData = async (type) => {
     setIsLoading(true);
@@ -33,9 +34,8 @@ const CategoryScreen = () => {
   };
 
   useEffect(() => {
-    fetchDrinksData("Cocktail");
-    fetchDrinksData("Ordinary_Drink");
-  }, []);
+    fetchDrinksData(selectedCategory);
+  }, [selectedCategory]);
 
   const renderLoader = () => {
     return isLoading ? (
@@ -47,30 +47,39 @@ const CategoryScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaViewContainer}>
-      {cocktailData && cocktailData.length > 0 ? (
-        <View style={styles.categoryContainer}>
-          <Text style={styles.title}>Cocktail</Text>
-          <FlatList
-            data={cocktailData}
-            renderItem={({ item }) => <DrinkItem item={item} />}
-            keyExtractor={(item) => item.idDrink}
-            ListFooterComponent={renderLoader}
-          />
-        </View>
-      ) : (
-        <View>
-          <Text style={styles.title}>Ordinary Drink</Text>
-          <FlatList
-            data={ordinaryDrinkData}
-            renderItem={({ item }) => <DrinkItem item={item} />}
-            keyExtractor={(item) => item.idDrink}
-            ListFooterComponent={renderLoader}
-          />
-        </View>
-      )}
+      <View style={styles.categoryContainer}>
+        <Text style={styles.title}>Categories</Text>
+        <Text
+          onPress={() => setSelectedCategory("Cocktail")}
+          style={[
+            styles.categoryTitle,
+            selectedCategory === "Cocktail" && styles.selectedCategory,
+          ]}
+        >
+          Cocktail
+        </Text>
+        <Text
+          onPress={() => setSelectedCategory("Ordinary_Drink")}
+          style={[
+            styles.categoryTitle,
+            selectedCategory === "Ordinary_Drink" && styles.selectedCategory,
+          ]}
+        >
+          Ordinary Drink
+        </Text>
+        <FlatList
+          data={
+            selectedCategory === "Cocktail" ? cocktailData : ordinaryDrinkData
+          }
+          renderItem={({ item }) => <DrinkItem item={item} />}
+          keyExtractor={(item) => item.idDrink}
+          ListFooterComponent={renderLoader}
+        />
+      </View>
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   safeAreaViewContainer: {
     flex: 1,
@@ -94,6 +103,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 10,
     color: "white",
+  },
+  categoryTitle: {
+    fontSize: 16,
+    marginBottom: 10,
+    color: "white",
+    backgroundColor: "green",
+    padding: 10,
+    borderRadius: 5,
+  },
+  selectedCategory: {
+    fontWeight: "bold",
   },
 });
 
