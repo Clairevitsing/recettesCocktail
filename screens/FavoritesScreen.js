@@ -6,7 +6,6 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  ImageBackground,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -35,7 +34,7 @@ function FavoritesScreen() {
     const intervalId = setInterval(() => {
       getFavorites();
     }, 1000);
-    
+
     return () => clearInterval(intervalId);
     // clearAsyncStorage();
   }, []);
@@ -53,7 +52,7 @@ function FavoritesScreen() {
     try {
       if (item) {
         await removeFromFavorites(item.idDrink);
-        // Mise à jour de la liste des favoris après la suppression
+        // Update the favorites list after deletion
         const updatedFavoritesList = await AsyncStorage.getItem("favorites");
         if (updatedFavoritesList) {
           setFavorites(JSON.parse(updatedFavoritesList));
@@ -68,7 +67,7 @@ function FavoritesScreen() {
   };
 
   const renderFavoriteItem = ({ item, index }) => {
-    // Vérifier si itemId est défini
+    // Check if itemId is defined
     if (!item || !item.idDrink || !item.strDrinkThumb) {
       return (
         <View>
@@ -77,10 +76,10 @@ function FavoritesScreen() {
       );
     }
 
-    // Extraire les propriétés idDrink et strDrinkThumb de itemId
+    // Extract the properties idDrink and strDrinkThumb from itemId
     const { idDrink, strDrink, strDrinkThumb } = item;
 
-    // Retourner l'élément avec les propriétés extraites
+    // Return the element with the extracted properties
     return (
       <View key={idDrink} style={styles.itemContainer}>
         <Image source={{ uri: strDrinkThumb }} style={styles.image} />
@@ -113,7 +112,8 @@ function FavoritesScreen() {
 const styles = StyleSheet.create({
   safeAreaViewContainer: {
     flex: 1,
-    backgroundColor: "transparent",
+    backgroundColor: "black",
+    marginTop: 10,
   },
   favoritesContainer: {
     flex: 1,
@@ -136,6 +136,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 25,
     paddingHorizontal: 20,
+    marginBottom: 20,
+    padding: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.7)",
+    borderRadius: 10,
   },
   textContainer: {
     flex: 1,

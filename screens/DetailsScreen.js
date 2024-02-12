@@ -103,7 +103,7 @@ function DetailsScreen({ route, navigation }) {
           <ChevronLeftIcon />
         </TouchableOpacity>
         <TouchableOpacity
-          title="Add to Favorites"
+          title={isFavorited ? "Remove from Favorites" : "Add to Favorites"}
           onPress={() => {
             if (isFavorited) {
               handleRemoveFromFavorites(drinkDetails);
@@ -222,32 +222,32 @@ const styles = StyleSheet.create({
   cardHeader: {
     flexDirection: "column",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   image: {
-    width: 400,
-    height: 400,
+    width: hp(35),
+    height: hp(35),
     borderRadius: 50,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   titleText: {
-    fontSize: 24,
+    fontSize: 16,
     fontWeight: "bold",
   },
   cardText: {
-    fontSize: 16,
-    marginBottom: 10,
+    fontSize: 12,
   },
   underlinedText: {
+    color: "blue",
     textDecorationLine: "underline",
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: "bold",
     marginBottom: 10,
   },
   cardIngredients: {
-    marginBottom: 20,
+    marginBottom: 10,
   },
   cardIngredient: {
     flexDirection: "row",

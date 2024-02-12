@@ -6,15 +6,15 @@ import {
   FlatList,
   Text,
   ActivityIndicator,
-  TouchableOpacity,
-  Image,
 } from "react-native";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { useNavigation } from "@react-navigation/native";
+import DrinkItem from "../components/DrinkItem";
 
 const AlcoholicDrinksScreen = () => {
     const [alcoholicDrinksData, setAlcoholicDrinksData] = useState([]);
     const [nonAlcoholicDrinksData, setNonAlcoholicDrinksData] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigation = useNavigation();
 
     const fetchDrinksData = async (type) => {
         setIsLoading(true);
@@ -38,16 +38,7 @@ const AlcoholicDrinksScreen = () => {
         fetchDrinksData("Alcoholic");
         fetchDrinksData("Non_Alcoholic");
     }, []);
-
-    const renderItem = ({ item }) => (
-      <View>
-        <Image source={{ uri: item.strDrinkThumb }} style={styles.image} />
-        <TouchableOpacity style={styles.item}>
-          <Text style={styles.itemText}>{item.strDrink}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-
+  
     const renderLoader = () => {
         return isLoading ? (
           <View style={[styles.loadingContainer, styles.horizontal]}>
@@ -60,10 +51,10 @@ const AlcoholicDrinksScreen = () => {
       <SafeAreaView style={styles.safeAreaViewContainer}>
         {alcoholicDrinksData && alcoholicDrinksData.length > 0 ? (
           <View style={styles.alcoholicContainer}>
-            <Text style={styles.text}>Alcoholic Drinks</Text>
+            <Text style={styles.title}>Alcoholic Drinks</Text>
             <FlatList
               data={alcoholicDrinksData}
-              renderItem={renderItem}
+              renderItem={({ item }) => <DrinkItem item={item} />}
               keyExtractor={(item) => item.idDrink}
               ListFooterComponent={renderLoader}
             />
@@ -73,7 +64,7 @@ const AlcoholicDrinksScreen = () => {
             <Text style={styles.text}>Non-alcoholic drinks</Text>
             <FlatList
               data={nonAlcoholicDrinksData}
-              renderItem={renderItem}
+              renderItem={({ item }) => <DrinkItem item={item} />}
               keyExtractor={(item) => item.idDrink}
               ListFooterComponent={renderLoader}
             />
@@ -85,6 +76,7 @@ const AlcoholicDrinksScreen = () => {
 const styles = StyleSheet.create({
   safeAreaViewContainer: {
     flex: 1,
+    backgroundColor:'black',
   },
   alcoholicContainer: {
     flex: 1,
@@ -100,23 +92,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     padding: 10,
   },
-  text: {
+  title: {
     fontSize: 20,
     marginBottom: 10,
-  },
-  item: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  itemText: {
-    fontSize: 16,
-  },
-  image: {
-    width: hp(30),
-    height: hp(30),
-    borderRadius: 50,
-    marginBottom: 10,
+    color: "white",
   },
 });
 

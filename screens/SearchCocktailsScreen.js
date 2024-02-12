@@ -7,12 +7,11 @@ import {
   Text,
   ActivityIndicator,
   StyleSheet,
-  Image,
   Modal,
   Button,
 } from "react-native";
 import * as Icon from "react-native-feather";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import DrinkItem from "../components/DrinkItem";
 
 const SearchCocktailsScreen = () => {
   const [searchQueryByIngredient, setSearchQueryByIngredient] = useState("");
@@ -85,7 +84,7 @@ const SearchCocktailsScreen = () => {
         toggleNoResultModal();
       }
     } catch (error) {
-      //console.error("Error fetching cocktails lors de cherche:", error);
+      //console.error("Error fetching cocktails while searching:", error);
       toggleErrorModal();
     }
     setIsLoading(false);
@@ -133,33 +132,17 @@ const SearchCocktailsScreen = () => {
       {/* Results */}
       <View style={styles.resultsContainer}>
         {cocktails.length > 0 || drinks.length > 0 ? (
-          <Text>The results are as follows:</Text>
+          <Text style={styles.title}>The results are as follows:</Text>
         ) : null}
         <FlatList
           data={cocktails}
           keyExtractor={(item) => item.idDrink}
-          renderItem={({ item }) => (
-            <View>
-              <Image
-                source={{ uri: item.strDrinkThumb }}
-                style={styles.image}
-              />
-              <Text>{item.strDrink}</Text>
-            </View>
-          )}
+          renderItem={({ item }) => <DrinkItem item={item} />}
         />
         <FlatList
           data={drinks}
           keyExtractor={(item) => item.idDrink}
-          renderItem={({ item }) => (
-            <View>
-              <Image
-                source={{ uri: item.strDrinkThumb }}
-                style={styles.image}
-              />
-              <Text>{item.strDrink}</Text>
-            </View>
-          )}
+          renderItem={({ item }) => <DrinkItem item={item} />}
         />
       </View>
 
@@ -219,6 +202,7 @@ const SearchCocktailsScreen = () => {
 const styles = StyleSheet.create({
   safeAreaViewContainer: {
     flex: 1,
+    backgroundColor: "black",
   },
   searchArea: {
     flexDirection: "row",
@@ -236,6 +220,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "gray",
     borderRadius: 5,
+    backgroundColor: "white",
   },
   loadingContainer: {
     flex: 1,
@@ -251,11 +236,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  image: {
-    width: hp(30),
-    height: hp(30),
-    borderRadius: 50,
+  title: {
+    fontSize: 16,
+    fontWeight: "bold",
     marginBottom: 10,
+    color: "white",
   },
   input: {
     flex: 1,
@@ -283,7 +268,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   errorBackground: {
-    backgroundColor: "green",
+    backgroundColor: "red",
   },
 });
 

@@ -6,10 +6,8 @@ import {
   FlatList,
   Text,
   ActivityIndicator,
-  TouchableOpacity,
-  Image,
 } from "react-native";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import DrinkItem from "../components/DrinkItem";
 
 const CategoryScreen = () => {
   const [ordinaryDrinkData, setOrdinaryDrinkData] = useState([]);
@@ -24,9 +22,9 @@ const CategoryScreen = () => {
       );
       const data = await response.json();
       if (type === "Cocktail") {
-        setOrdinaryDrinkData(data.drinks);
-      } else {
         setCocktailData(data.drinks);
+      } else {
+        setOrdinaryDrinkData(data.drinks);
       }
     } catch (error) {
       console.error("Error fetching filtered data:", error);
@@ -38,15 +36,6 @@ const CategoryScreen = () => {
     fetchDrinksData("Cocktail");
     fetchDrinksData("Ordinary_Drink");
   }, []);
-
-  const renderItem = ({ item }) => (
-    <View>
-      <Image source={{ uri: item.strDrinkThumb }} style={styles.image} />
-      <TouchableOpacity style={styles.item}>
-        <Text style={styles.itemText}>{item.strDrink}</Text>
-      </TouchableOpacity>
-    </View>
-  );
 
   const renderLoader = () => {
     return isLoading ? (
@@ -60,20 +49,20 @@ const CategoryScreen = () => {
     <SafeAreaView style={styles.safeAreaViewContainer}>
       {cocktailData && cocktailData.length > 0 ? (
         <View style={styles.categoryContainer}>
-          <Text style={styles.text}>Cocktail</Text>
+          <Text style={styles.title}>Cocktail</Text>
           <FlatList
             data={cocktailData}
-            renderItem={renderItem}
+            renderItem={({ item }) => <DrinkItem item={item} />}
             keyExtractor={(item) => item.idDrink}
             ListFooterComponent={renderLoader}
           />
         </View>
       ) : (
         <View>
-          <Text style={styles.text}>Ordinary Drink</Text>
+          <Text style={styles.title}>Ordinary Drink</Text>
           <FlatList
             data={ordinaryDrinkData}
-            renderItem={renderItem}
+            renderItem={({ item }) => <DrinkItem item={item} />}
             keyExtractor={(item) => item.idDrink}
             ListFooterComponent={renderLoader}
           />
@@ -85,6 +74,7 @@ const CategoryScreen = () => {
 const styles = StyleSheet.create({
   safeAreaViewContainer: {
     flex: 1,
+    backgroundColor: "black",
   },
   categoryContainer: {
     flex: 1,
@@ -100,23 +90,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     padding: 10,
   },
-  text: {
+  title: {
     fontSize: 20,
     marginBottom: 10,
-  },
-  item: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  itemText: {
-    fontSize: 16,
-  },
-  image: {
-    width: hp(30),
-    height: hp(30),
-    borderRadius: 50,
-    marginBottom: 10,
+    color: "white",
   },
 });
 

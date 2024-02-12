@@ -7,10 +7,9 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
-import * as Icons from "react-native-heroicons/solid";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import DrinkItem from "../components/DrinkItem";
 
 const DrinkList = ({ drinksData, loadMoreItems }) => {
   const navigation = useNavigation();
@@ -24,46 +23,47 @@ const DrinkList = ({ drinksData, loadMoreItems }) => {
     navigation.navigate("Details", { idDrink });
   };
 
+  // two methods for loading 1,
   const renderLoader = () => {
     return isLoading ? (
-      <View style={styles.loaderStyle}>
+      <View style={[styles.loadingContainer, styles.horizontal]}>
         <ActivityIndicator size="large" color="#aaa" />
       </View>
     ) : null;
   };
+  // two methods for loading 2,
+  // if (!drinksData) {
+  //   return (
+  //     <View style={[styles.loadingContainer, styles.horizontal]}>
+  //       <ActivityIndicator size="large" color="#0000ff" />
+  //     </View>
+  //   );
+  // }
 
-  if (!drinksData) {
-    return (
-      <View style={[styles.loadingContainer, styles.horizontal]}>
-        <ActivityIndicator size="large" color="#0000ff" />
+  const renderItem = ({ item }) => (
+    <View style={styles.itemContainer}>
+      <Image source={{ uri: item.strDrinkThumb }} style={styles.image} />
+
+      <View style={styles.informations}>
+        <View style={styles.name}>
+          <Text style={styles.text}>{item.strDrink}</Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => handleDetailsNavigation(item.idDrink)}
+          style={styles.detailsLink}
+        >
+          <Text style={styles.moreLink}>Learn More</Text>
+        </TouchableOpacity>
       </View>
-    );
-  }
+    </View>
+  );
+
   return (
     <View style={styles.cocktailContainer}>
       {drinksData ? (
         <FlatList
           data={drinksData}
-          renderItem={({ item }) => (
-            <View style={styles.itemContainer}>
-              <Image
-                source={{ uri: item.strDrinkThumb }}
-                style={styles.image}
-              />
-
-              <View style={styles.informations}>
-                <View style={styles.name}>
-                  <Text style={styles.text}>{item.strDrink}</Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() => handleDetailsNavigation(item.idDrink)}
-                  style={styles.detailsLink}
-                >
-                  <Text style={styles.moreLink}>Learn More</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
+          renderItem={({ item }) => <DrinkItem item={item} />}
           // in order to keep the key unique
           keyExtractor={(item, index) => item.idDrink + index}
           onEndReached={handleLoadMore}
@@ -92,29 +92,6 @@ const styles = {
   cocktailContainer: {
     justifyContent: "center",
     alignItems: "center",
-  },
-  image: {
-    width: hp(30),
-    height: hp(30),
-    borderRadius: 50,
-    marginBottom: 10,
-  },
-  itemContainer: {
-    marginBottom: 20,
-    padding: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
-    borderRadius: 10,
-  },
-  informations: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  name: {
-    flex: 1,
-  },
-  moreLink: {
-    textDecorationLine: "underline",
-    color: "blue",
   },
 };
 
