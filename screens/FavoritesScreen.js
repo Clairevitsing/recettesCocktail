@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  ImageBackground,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -103,7 +104,6 @@ function FavoritesScreen() {
           data={favorites}
           renderItem={renderFavoriteItem}
           keyExtractor={(item, index) => `${item.idDrink}`}
-          ListHeaderComponent={<Text>Favorites:</Text>}
         />
       </View>
     </SafeAreaView>
@@ -113,10 +113,18 @@ function FavoritesScreen() {
 const styles = StyleSheet.create({
   safeAreaViewContainer: {
     flex: 1,
+    backgroundColor: "transparent",
   },
   favoritesContainer: {
     flex: 1,
+    alignItems: "center",
     justifyContent: "center",
+  },
+  backgroundImage: {
+    flex: 1,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 20,
@@ -126,7 +134,8 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: "column",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 25,
+    paddingHorizontal: 20,
   },
   textContainer: {
     flex: 1,
