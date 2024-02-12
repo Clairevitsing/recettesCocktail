@@ -75,13 +75,6 @@ function DetailsScreen({ route, navigation }) {
     }
   };
 
-  // const handleRemoveFromFavorites = async () => {
-  //   if (drinkDetails) {
-  //     await removeFromFavorites(drinkDetails);
-  //     setIsFavorited(false);
-  //   }
-  // };
-
   const handleRemoveFromFavorites = async (item) => {
     try {
       if (item) {
@@ -122,48 +115,51 @@ function DetailsScreen({ route, navigation }) {
           style={styles.heartIconArea}
         >
           <Icons.HeartIcon
-            // style={[styles.heartIcon, isFavorited && styles.favoritedColor]}
             style={[styles.heartIcon, { color: isFavorited ? "red" : "gray" }]}
           />
         </TouchableOpacity>
       </View>
       {drinkDetails && (
-        <View style={styles.description}>
-          <Image
-            source={{ uri: drinkDetails.strDrinkThumb }}
-            style={styles.image}
-          />
-          <Text style={styles.text}>{drinkDetails.strDrink}</Text>
-          <Text style={styles.text}>{drinkDetails.idDrink}</Text>
-          <TouchableOpacity onPress={handleAlcoholicPress}>
-            <Text style={styles.text}>
-              Alcoolisé: {drinkDetails.strAlcoholic}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleCategoryPress}>
-            <Text style={styles.text}>
-              Category: {drinkDetails.strCategory}
-            </Text>
-          </TouchableOpacity>
-          <Text style={styles.text}>Verre: {drinkDetails.strGlass}</Text>
-          <Text style={styles.text}>Ingrédients:</Text>
-          {Object.keys(drinkDetails).map((key) => {
-            if (key.startsWith("strIngredient") && drinkDetails[key]) {
-              return (
-                <View key={key} style={styles.ingredientItem}>
-                  <View style={styles.pinkSquare}></View>
-                  <View style={styles.ingredientTextContainer}>
-                    <Text style={styles.ingredientText}>
-                      {drinkDetails[key]}
-                    </Text>
-                  </View>
-                </View>
-              );
-            }
-          })}
-          <Text style={styles.text}>
-            Instructions: {drinkDetails.strInstructions}
-          </Text>
+        <View style={styles.cardContainer}>
+          <View style={styles.cardHeader}>
+            <Image
+              source={{ uri: drinkDetails.strDrinkThumb }}
+              style={styles.image}
+            />
+            <Text style={styles.titleText}>{drinkDetails.strDrink}</Text>
+          </View>
+          <View style={styles.cardBody}>
+            <TouchableOpacity onPress={handleAlcoholicPress}>
+              <Text style={[styles.cardText, styles.underlinedText]}>
+                Alcoholic: {drinkDetails.strAlcoholic}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleCategoryPress}>
+              <Text style={[styles.cardText, styles.underlinedText]}>
+                Category: {drinkDetails.strCategory}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.cardText}>Glass: {drinkDetails.strGlass}</Text>
+            <Text style={styles.cardTitle}>Ingredients:</Text>
+            <View style={styles.cardIngredients}>
+              {Object.keys(drinkDetails).map((key) => {
+                if (key.startsWith("strIngredient") && drinkDetails[key]) {
+                  return (
+                    <View key={key} style={styles.cardIngredient}>
+                      <View style={styles.cardBullet}></View>
+                      <Text style={styles.cardText}>{drinkDetails[key]}</Text>
+                    </View>
+                  );
+                }
+              })}
+            </View>
+            <View style={styles.cardInstructions}>
+              <Text style={styles.cardTitle}>Instructions:</Text>
+              <Text style={styles.cardText}>
+                {drinkDetails.strInstructions}
+              </Text>
+            </View>
+          </View>
         </View>
       )}
     </ScrollView>
@@ -172,6 +168,9 @@ function DetailsScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   contentContainer: {
+    flex: 1,
+  },
+  textContainer: {
     flex: 1,
   },
   barIcon: {
@@ -205,44 +204,62 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  description: {
-    alignItems: "center",
-    justifyContent: "center",
+
+  cardContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  text: {
-    marginBottom: 10,
+  cardHeader: {
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: 20,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 400,
+    height: 400,
     borderRadius: 50,
+    marginBottom: 20,
+  },
+  titleText: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  cardText: {
+    fontSize: 16,
     marginBottom: 10,
   },
-  // favoritedColor: {
-  //   color: "red",
-  // },
-  ingredientItem: {
+  underlinedText: {
+    textDecorationLine: "underline",
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  cardIngredients: {
+    marginBottom: 20,
+  },
+  cardIngredient: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 5,
   },
-  pinkSquare: {
-    width: 20,
-    height: 20,
+  cardBullet: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
     backgroundColor: "pink",
     marginRight: 10,
-  },
-  ingredientTextContainer: {
-    flex: 1,
-  },
-  ingredientText: {
-    fontSize: 16,
-  },
-  instructionsText: {
-    textAlign: "center",
-  },
-  underline: {
-    textDecorationLine: "underline",
   },
 });
 

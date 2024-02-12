@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import * as Icon from "react-native-feather"; // Correct import for icons
+import * as Icon from "react-native-feather";
 import HomeScreen from "../screens/HomeScreen";
 import SearchCocktailsScreen from "../screens/SearchCocktailsScreen";
 import FavoritesScreen from "../screens/FavoritesScreen";
@@ -44,7 +44,7 @@ const TabNavigator = () => {
               <Text
                 style={{
                   color: focused ? "#e32f45" : "#748c94",
-                  fontSize: 12, 
+                  fontSize: 12,
                 }}
               >
                 HOME

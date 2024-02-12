@@ -1,4 +1,12 @@
-import { Text, View,SafeAreaView, StyleSheet, Image, FlatList, Button } from "react-native";
+import {
+  Text,
+  View,
+  SafeAreaView,
+  StyleSheet,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -22,7 +30,7 @@ function FavoritesScreen() {
 
     getFavorites();
 
-    //refrech automatically
+    //in order to refrech automatically
     const intervalId = setInterval(() => {
       getFavorites();
     }, 1000);
@@ -73,13 +81,17 @@ function FavoritesScreen() {
 
     // Retourner l'élément avec les propriétés extraites
     return (
-      <View key={idDrink}>
+      <View key={idDrink} style={styles.itemContainer}>
         <Image source={{ uri: strDrinkThumb }} style={styles.image} />
-        <Text>{strDrink}</Text>
-        <Button
-          title="Remove"
-          onPress={() => handleRemoveFromFavorites(item)}
-        />
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{strDrink}</Text>
+          <TouchableOpacity
+            onPress={() => handleRemoveFromFavorites(item)}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Remove</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
@@ -104,7 +116,7 @@ const styles = StyleSheet.create({
   },
   favoritesContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   title: {
     fontSize: 20,
@@ -112,19 +124,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   itemContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     marginBottom: 10,
   },
   textContainer: {
     flex: 1,
     marginLeft: 10,
-  },
-  text: {
-    fontSize: 16,
+    flexDirection: "column",
   },
   button: {
-    marginLeft: "auto",
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
   image: {
     width: hp(30),

@@ -3,13 +3,12 @@ import {
   View,
   Image,
   Text,
-  Button,
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
 import * as Icons from "react-native-heroicons/solid";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
