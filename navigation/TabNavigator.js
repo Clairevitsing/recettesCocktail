@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import * as Icon from "react-native-feather";
-import HomeScreen from "../screens/HomeScreen";
+import HomeScreen from "../screens/Homescreen";
 import SearchCocktailsScreen from "../screens/SearchCocktailsScreen";
 import FavoritesScreen from "../screens/FavoritesScreen";
 
